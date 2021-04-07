@@ -27,5 +27,7 @@ public interface BlockType extends Serializable {
 	public Map<String, Object> serialize();
 
 	public String getID();
+	
+	public int getDelay();
 
 }
