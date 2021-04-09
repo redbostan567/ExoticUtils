@@ -35,6 +35,11 @@ public abstract class Block implements Serializable {
 	private BlockType type;
 	
 	/**
+	 * Dictates whether or not the block exists in the world.
+	 */
+	private boolean broken = false;
+	
+	/**
 	 * @param loc  Location of the custom block
 	 * @param type Type of the custom block
 	 */
@@ -164,6 +169,14 @@ public abstract class Block implements Serializable {
 	public static ItemStack createItemStack(BlockType t) {
 		return new ItemBuilder(t.getItemName(), t.getMaterial(), t.getLore()).setGlow(t.isGlowing())
 				.addNBTTag(t.getTags()).addNBTTag("block-id", new NBTString(t.getID())).getItem();
+	}
+	
+	public boolean isBroken() {
+		return broken;
+	}
+	
+	public void setBroken(boolean broke) {
+		this.broken = broke;
 	}
 
 }

@@ -12,6 +12,8 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.bukkit.inventory.ItemStack;
+
 public class Utils {
 
 	public static boolean random(int min, int max) {
@@ -81,6 +83,11 @@ public class Utils {
 			e.printStackTrace();
 		}
 
+	}
+
+	public static boolean nonNull(ItemStack stack) {
+		
+		return stack != null ? stack.hasItemMeta() ? stack.getItemMeta().hasLore() && stack.getItemMeta().hasDisplayName() : false : false;
 	}
 	
 }
