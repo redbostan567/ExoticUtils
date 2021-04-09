@@ -70,6 +70,8 @@ public class BlockListener implements Listener {
 
 		block.setBroken(true);
 		block.onBreak(e.getPlayer());
+		
+		activeBlocks.remove(loc);
 	}
 
 	public boolean registerBlock(BlockType type) {
