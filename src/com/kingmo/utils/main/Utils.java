@@ -12,7 +12,10 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.util.io.BukkitObjectInputStream;
+import org.bukkit.util.io.BukkitObjectOutputStream;
 
 public class Utils {
 
@@ -59,7 +62,7 @@ public class Utils {
 			if (!f.exists())
 				f.createNewFile();
 
-			ObjectInputStream ois = new ObjectInputStream(new FileInputStream(f));
+			ObjectInputStream ois = new BukkitObjectInputStream(new FileInputStream(f));
 			ob = ois.readObject();
 			ois.close();
 			System.out.println("Loaded " + f.getName());
@@ -73,10 +76,13 @@ public class Utils {
 	
 	public static void save(File f, Object o) {
 		ObjectOutputStream oos;
+		
+		System.out.println(o);
+		
 		try {
 			if (!f.exists())
 				f.createNewFile();
-			oos = new ObjectOutputStream(new FileOutputStream(f));
+			oos = new BukkitObjectOutputStream(new FileOutputStream(f));
 			oos.writeObject(o);
 			oos.close();
 		} catch (IOException e) {
@@ -89,5 +95,11 @@ public class Utils {
 		
 		return stack != null ? stack.hasItemMeta() ? stack.getItemMeta().hasLore() && stack.getItemMeta().hasDisplayName() : false : false;
 	}
+	
+	
+	public static String color(String str) {
+		return ChatColor.translateAlternateColorCodes('&', str);
+	}
+	
 	
 }

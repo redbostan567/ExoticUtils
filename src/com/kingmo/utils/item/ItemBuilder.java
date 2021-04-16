@@ -58,6 +58,7 @@ public class ItemBuilder {
 		itemMeta.setDisplayName(name);
 		itemMeta.setLore(lore);
 		item.setItemMeta(itemMeta);
+		this.item = item;
 	}
 
 	public ItemBuilder(String name, Material m) {
@@ -99,7 +100,7 @@ public class ItemBuilder {
 	}
 
 	public ItemBuilder addNBTTag(Map<String, NBTBase> tags) {
-		
+		if(tags==null)return this;
 		for(String str: tags.keySet()) {
 			this.addNBTTag(str, tags.get(str));
 		}

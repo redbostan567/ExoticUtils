@@ -1,16 +1,16 @@
 package com.kingmo.utils.blocks;
 
-import java.io.Serializable;
 import java.lang.reflect.InvocationTargetException;
 import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import net.minecraft.server.v1_8_R3.NBTBase;
 
-public interface BlockType extends Serializable {
+public interface BlockType extends ConfigurationSerializable {
 
 	public String getName();
 
@@ -31,6 +31,8 @@ public interface BlockType extends Serializable {
 	public String getID();
 
 	public int getDelay();
+	
+	public boolean showName();
 
 	public default Block getBlockFromType(Location loc) throws ClassNotFoundException {
 		Block block = null;
@@ -39,6 +41,7 @@ public interface BlockType extends Serializable {
 					this);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e1) {
+			e1.printStackTrace();
 			throw new ClassNotFoundException("Block class for BlockType " + this.toString() + " was not found.");
 		}
 

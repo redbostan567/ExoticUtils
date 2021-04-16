@@ -1,5 +1,8 @@
 package com.kingmo.utils.nbt;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import org.bukkit.Bukkit;
 import org.bukkit.craftbukkit.v1_8_R3.CraftServer;
 import org.bukkit.craftbukkit.v1_8_R3.entity.CraftEntity;
@@ -68,4 +71,20 @@ public class NBTTagManager{
 		tag = CraftItemStack.asNMSCopy(is).getTag();
 	}
 	
+	
+	public static Map<String, NBTBase> cast(Map<String, String> tags) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	@SuppressWarnings("unused")
+	public static Map<String, String> castTo(Map<String, NBTBase> tags){
+		
+		Map<String, String> finalMap = new HashMap<>();
+		
+		for(String key : tags.keySet()) {
+			
+		}
+		return null;
+	}
 }
