@@ -5,6 +5,7 @@ import java.util.List;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.entity.ArmorStand;
@@ -98,7 +99,7 @@ public class BlockListener implements Listener {
 		block.onBreak(e.getPlayer());
 
 		e.getBlock().setType(Material.AIR);
-		loc.getWorld().dropItemNaturally(loc, Block.createItemStack(block.getType()));
+		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE))loc.getWorld().dropItemNaturally(loc, Block.createItemStack(block.getType()));
 		
 		if(block.getType().showName())
 		block.getArmorStand().remove();
@@ -144,8 +145,6 @@ public class BlockListener implements Listener {
 	public static void addArmorStand(Block block) {
 		Location loc = block.getBlock().getLocation().add(0.5, -1, 0.5);
 		ArmorStand as = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
-		
-		// as.setInvulnerable(true);
 		as.setVisible(false);
 		as.setCustomName(block.getName());
 		as.setCustomNameVisible(true);

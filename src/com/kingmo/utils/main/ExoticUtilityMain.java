@@ -15,6 +15,8 @@ import com.kingmo.utils.blocks.Block;
 import com.kingmo.utils.blocks.BlockListener;
 import com.kingmo.utils.blocks.BlockType;
 import com.kingmo.utils.blocks.LoopedRunnable;
+import com.kingmo.utils.commands.CommandManager;
+import com.kingmo.utils.test.TestMain;
 
 public class ExoticUtilityMain extends JavaPlugin {
 
@@ -27,6 +29,8 @@ public class ExoticUtilityMain extends JavaPlugin {
 	private static File loopFile;
 
 	private static Map<Location, LoopedRunnable> loopMap;
+	
+	private CommandManager cmdManager;
 	
 	static {
 		ConfigurationSerialization.registerClass(Block.class);
@@ -47,9 +51,20 @@ public class ExoticUtilityMain extends JavaPlugin {
 
 		BlockListener.loadStands();
 		
+		log.info("Loading commands");
+		
+		cmdManager = new CommandManager(this);
+		TestMain.test();
+		
 		log.info("ExoticUtils enabled");
 
 	}
+	
+	public CommandManager getCommandManager() {
+		return cmdManager;
+	}
+
+	
 
 	private void createSaveFiles() {
 		File folder = FileManager.getPluginDir(this);

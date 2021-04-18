@@ -14,12 +14,11 @@ public class ConfigManager {
 
 	public ConfigManager(YamlConfiguration config, Plugin plugin) {
 		this.config = config;
-		this.plugin = plugin;
+		this.plugin = plugin;		
 	}
 
 	public ConfigManager(Plugin plugin) {
-		this.config = (YamlConfiguration) plugin.getConfig();
-		this.plugin = plugin;
+		this((YamlConfiguration) plugin.getConfig(), plugin);
 	}
 
 	public Map<String, Object> getMap(String path) throws NullPointerException {
