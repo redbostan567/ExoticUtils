@@ -177,14 +177,27 @@ public abstract class Block implements ConfigurationSerializable {
 				.addNBTTag(t.getTags()).addNBTTag("block-id", new NBTString(t.getID())).getItem();
 	}
 
+	
+	/**
+	 * @apiNote I decided not to delete the object upon breakage of the block, so instead heres this method.
+	 * @return whether or not the block is currently broken.
+	 */
 	public boolean isBroken() {
 		return broken;
 	}
 
+	/**
+	 * @apiNote Do not use unless you are sure the block is broken
+	 * @param broke 
+	 */
 	public void setBroken(boolean broke) {
 		this.broken = broke;
 	}
 
+	/**
+	 * 
+	 * @return display name of the item
+	 */
 	public String getName() {
 		return this.getType().getItemName();
 	}

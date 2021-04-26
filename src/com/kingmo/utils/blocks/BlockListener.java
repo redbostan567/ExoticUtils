@@ -48,16 +48,20 @@ public class BlockListener implements Listener {
 		BlockListener.activeBlocks = active;
 	}
 
+	/**
+	 * Used to calculate when the custom blocks are placed
+	 */
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
 
 		ItemStack stack = e.getItemInHand();
 		
 		Player player = e.getPlayer();
-		
+	
 		if (!Utils.nonNull(stack))
 			return;
 
+		//Decides whether or not the block in the players hand is a custom block
 		BlockType blockType = registeredBlocks.getOrDefault(stack.getItemMeta().getDisplayName(), null);
 		if (blockType == null)
 			return;
@@ -67,58 +71,78 @@ public class BlockListener implements Listener {
 		Block block = null;
 		try {
 			block = blockType.getBlockFromType(loc);
+			//creates the custom block instance
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
 
 		block.run(loc, player);
-		
+		//runs the custom block and then decides if its a looped custom block
 		LoopedRunnable loop = new LoopedRunnable(block, player, loc);
 		if (blockType.getDelay() > 0)
 			Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ExoticUtils"),
 					loop, block.getType().getDelay());
 
-		
+		//calls on place not much difference between run and place unless your using a looped without redefining looped.
 		block.onPlace(e.getPlayer());
 		
+		
+		//adds loop for serialization
 		ExoticUtilityMain.addLoop(loc, loop);
 		
+		//adds block to map for serialization
 		activeBlocks.put(loc, block);
 	}
 
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
 		Location loc = e.getBlock().getLocation();
-
+		//decides whether or not the block broken is a custom block
 		if (!activeBlocks.containsKey(loc))
 			return;
 
+		//gets block instance
 		Block block = activeBlocks.get(loc);
 
+		//destroys block so looped runnable cancels
 		block.setBroken(true);
+		//Calls onbreak method
 		block.onBreak(e.getPlayer());
 
+		//breaks the item in the actual game and drops custom item.
 		e.getBlock().setType(Material.AIR);
 		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE))loc.getWorld().dropItemNaturally(loc, Block.createItemStack(block.getType()));
 		
+		//Kills armor stand if the name is shown
 		if(block.getType().showName())
 		block.getArmorStand().remove();
 		block.setArmorStand(null);
 		
+		
+		//removes the block from all registrys
 		ExoticUtilityMain.removeLoop(loc);
 		activeBlocks.remove(loc);
 	}
 	
+	/**
+	 * Clears all active armor stands for reboot.
+	 */
 	public static void clearStands() {
-		System.out.println(activeBlocks);
 		for(Block b: activeBlocks.values()) {
 			if(b.getType().showName()) {
-				System.err.println(b.getArmorStand());
 				b.getArmorStand().remove();
 			}
 		}
 	}
 
+	
+	/**
+	 * <blockquote>
+	 * Use this to register any blocks
+	 * </blockquote>
+	 * @param type the block type being registered
+	 * @return whether or not the block was registered properly
+	 */
 	public static boolean registerBlock(BlockType type) {
 		String key = type.getItemName();
 		if (registeredBlocks.containsKey(key))
@@ -128,6 +152,11 @@ public class BlockListener implements Listener {
 
 	}
 
+	
+	/**
+	 * Registers all block in a list.
+	 * @param types a list of all blocks being registered
+	 */
 	public static void registerBlocks(List<BlockType> types) {
 
 		for (BlockType type : types)
@@ -141,7 +170,10 @@ public class BlockListener implements Listener {
 	public static Map<Location, Block> getActiveBlocks() {
 		return BlockListener.activeBlocks;
 	}
-	
+	/**
+	 * @apiNote Do not use as it is automatically done in the API.
+	 * @param block the Block in which the Name tag would be put on.
+	 */
 	public static void addArmorStand(Block block) {
 		Location loc = block.getBlock().getLocation().add(0.5, -1, 0.5);
 		ArmorStand as = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
@@ -153,6 +185,9 @@ public class BlockListener implements Listener {
 		block.setArmorStand(as);
 	}
 
+	/**
+	 * Load Armor stands.
+	 */
 	public static void loadStands() {
 		for(Block b: activeBlocks.values()) {
 			if(b.getType().showName()) {

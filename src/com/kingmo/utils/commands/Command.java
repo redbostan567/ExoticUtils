@@ -18,6 +18,10 @@ public abstract class Command extends BukkitCommand {
 		this(name, aliases, description, usage, "", new HashMap<>());
 	}
 
+	public Command(String name, List<String> aliases, String description, String usage, String permission) {
+		this(name, aliases, description, usage, permission, new HashMap<>());
+	}
+
 	public Command(String name, List<String> aliases, String description, String usage, String permission,
 			Map<Integer, List<String>> tabComplete) {
 		super(name);
@@ -37,18 +41,20 @@ public abstract class Command extends BukkitCommand {
 
 	@Override
 	public boolean execute(CommandSender sender, String alias, String[] args) {
-		
-		if(sender instanceof Player) return this.run((Player) sender, args);
-		else return run(sender, args);
+
+		if (sender instanceof Player)
+			return this.run((Player) sender, args);
+		else
+			return run(sender, args);
 	}
 
 	@Override
 	public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
-		return this.testPermission(sender) ? tabComplete.get(args.length) : new ArrayList<>();
+		return this.testPermission(sender) ? tabComplete.get(args.length - 1) : new ArrayList<>();
 	}
 
 	@Override
 	public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location loc) {
-		return this.testPermission(sender) ? tabComplete.get(args.length) : new ArrayList<>();
+		return this.testPermission(sender) ? tabComplete.get(args.length - 1) : new ArrayList<>();
 	}
 }

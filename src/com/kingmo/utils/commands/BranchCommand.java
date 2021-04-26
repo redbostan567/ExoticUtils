@@ -4,7 +4,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
+import org.bukkit.Location;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
@@ -19,22 +21,23 @@ public class BranchCommand extends Command {
 	private Map<String, SubCommand> cmds;
 	private final String COLOR_CODE_ONE;
 	private final String COLOR_CODE_TWO;
-	
-	
+
+	private Map<Integer, List<String>> tabComplete = new HashMap<>();
+
 	public BranchCommand(String name, List<String> aliases, String description, String usage, List<SubCommand> cmds) {
-		this(name, aliases, description, usage, "", new HashMap<>(), cmds);
+		this(name, aliases, description, usage, "", cmds);
 	}
 
 	public BranchCommand(String name, List<String> aliases, String description, String usage, String permission,
-			Map<Integer, List<String>> tabComplete, List<SubCommand> cmd) {
+			List<SubCommand> cmd) {
 
-		this(name, aliases, description, usage, permission, tabComplete, cmd, Utils.color("&f"), Utils.color("&b&l"));
+		this(name, aliases, description, usage, permission, cmd, Utils.color("&f"), Utils.color("&b&l"));
 
 	}
 
 	public BranchCommand(String name, List<String> aliases, String description, String usage, String permission,
-			Map<Integer, List<String>> tabComplete, List<SubCommand> cmd, String colorOne, String colorTwo) {
-		super(name, aliases, description, usage, permission, tabComplete);
+			List<SubCommand> cmd, String colorOne, String colorTwo) {
+		super(name, aliases, description, usage, permission);
 
 		this.cmds = new HashMap<>();
 
@@ -46,20 +49,49 @@ public class BranchCommand extends Command {
 				cmds.put(alias, sub);
 
 		}
-		
+
 		this.COLOR_CODE_ONE = colorOne;
 		this.COLOR_CODE_TWO = colorTwo;
-		
+
 		cmds.put("help", new BranchHelpCommand(this));
+
+		tabComplete.put(0, 
+				cmds.keySet().stream().collect(Collectors.toList()));
+		
+		System.out.println(tabComplete);
+	}
+
+	@Override
+	public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
+		if (args.length <= 1)
+			return this.testPermission(sender) ? tabComplete.get(args.length - 1) : new ArrayList<>();
+
+		if (!cmds.containsKey(args[0]))
+			return new ArrayList<>();
+
+		SubCommand cmd = cmds.get(args[0]);
+
+		Map<Integer, List<String>> tab2 = cmd.getTabComplete();
+		Map<Integer, List<String>> tabComplete = this.tabComplete;
+		
+		for (int i : tab2.keySet()) {
+			tabComplete.put(i + 1, tab2.get(i));
+		}
+
+		return tabComplete.getOrDefault(args.length - 1, new ArrayList<>());
+	}
+
+	@Override
+	public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location loc) {
+		return this.tabComplete(sender, alias, args);
 	}
 
 	@Override
 	public boolean run(CommandSender sender, String[] args) {
-		
-		if(args.length == 0) 
+
+		if (args.length == 0)
 			return cmds.get("help").run(sender, args);
-		
-		
+
 		if (!cmds.containsKey(args[0])) {
 			sender.sendMessage(CommandManager.ALIAS_NOT_FOUND.replace("[command]", this.getName()));
 			return false;
@@ -70,11 +102,10 @@ public class BranchCommand extends Command {
 
 	@Override
 	public boolean run(Player player, String[] args) {
-		
-		if(args.length == 0) 
+
+		if (args.length == 0)
 			return cmds.get("help").run(player, args);
-		
-		
+
 		if (!cmds.containsKey(args[0])) {
 			player.sendMessage(CommandManager.ALIAS_NOT_FOUND.replace("[command]", this.getName()));
 			return false;
@@ -95,9 +126,11 @@ public class BranchCommand extends Command {
 	public Map<String, SubCommand> getCommands() {
 		return cmds;
 	}
-	
+
 	protected void addSubCommand(SubCommand cmd) {
 		this.cmds.put(cmd.getName(), cmd);
+		tabComplete.put(0, 
+				cmds.keySet().stream().collect(Collectors.toList()));
 	}
 
 }
@@ -107,8 +140,7 @@ class BranchHelpCommand extends SubCommand {
 	BranchCommand branchCommand;
 
 	BranchHelpCommand(BranchCommand comm) {
-		super("help", new ArrayList<>(),
-				"This command will show options for this entire branch command",
+		super("help", new ArrayList<>(), "This command will show options for this entire branch command",
 				comm.getUsage() + " help", "", new HashMap<>());
 
 		this.branchCommand = comm;
@@ -119,11 +151,10 @@ class BranchHelpCommand extends SubCommand {
 
 		sender.sendMessage(branchCommand.getCOLOR_CODE_ONE() + "------------ " + branchCommand.getCOLOR_CODE_TWO()
 				+ this.branchCommand.getName() + branchCommand.getCOLOR_CODE_ONE() + " ------------");
-		
-		
-		for(SubCommand cmd: branchCommand.getCommands().values()) 
+
+		for (SubCommand cmd : branchCommand.getCommands().values())
 			sender.sendMessage(branchCommand.getCOLOR_CODE_TWO() + this.branchCommand.getName() + " " + cmd.getName());
-		
+
 		sender.sendMessage(branchCommand.getCOLOR_CODE_ONE() + "------------------------------");
 		return true;
 	}
@@ -140,16 +171,17 @@ class BranchHelpCommand extends SubCommand {
 
 		manager.sendFancyMessage(top);
 
-
 		for (SubCommand cmd : branchCommand.getCommands().values()) {
 
 			manager.sendFancyMessage(
-					new FancyMessage(branchCommand.getCOLOR_CODE_TWO() + "/" + this.branchCommand.getName() +  " " + cmd.getName(),
+					new FancyMessage(
+							branchCommand.getCOLOR_CODE_TWO() + "/" + this.branchCommand.getName() + " "
+									+ cmd.getName(),
 							"/" + this.branchCommand.getName() + " " + cmd.getName(), ClickEvent.Action.SUGGEST_COMMAND,
 							this.formatHover(cmd)));
 
 		}
-		
+
 		player.sendMessage(branchCommand.getCOLOR_CODE_ONE() + "------------------------------");
 
 		return true;
