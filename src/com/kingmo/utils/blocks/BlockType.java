@@ -11,8 +11,6 @@ import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 import com.kingmo.utils.nbt.NBTTagManager;
 
-import net.minecraft.server.v1_8_R3.NBTBase;
-
 public interface BlockType extends ConfigurationSerializable {
 	/**
 	 * @return The Name put in maps for the block. Relatively unused
@@ -40,7 +38,7 @@ public interface BlockType extends ConfigurationSerializable {
 	 * 
 	 * @return The NBTTags for the ItemStack
 	 */
-	public Map<String, NBTBase> getTags();
+	public Map<String, Object> getTags();
 
 	/**
 	 * 

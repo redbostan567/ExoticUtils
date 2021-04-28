@@ -54,7 +54,7 @@ public class ExoticUtilityMain extends JavaPlugin {
 		log.info("Loading commands");
 		
 		cmdManager = new CommandManager(this);
-		TestMain.test();
+		//TestMain.test(); only for testing
 		
 		log.info("ExoticUtils enabled");
 

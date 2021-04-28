@@ -10,11 +10,9 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.kingmo.utils.glow.Glow;
+import com.kingmo.utils.glow.Glow;	
 import com.kingmo.utils.main.Utils;
 import com.kingmo.utils.nbt.NBTTagManager;
-
-import net.minecraft.server.v1_8_R3.NBTBase;
 
 public class ItemBuilder {
 
@@ -92,14 +90,14 @@ public class ItemBuilder {
 		return this;
 	}
 
-	public ItemBuilder addNBTTag(String key, NBTBase base) {
+	public ItemBuilder addNBTTag(String key, Object base) {
 		NBTTagManager manager = new NBTTagManager(item);
 		manager.setTag(key, base);
 		item = manager.addTagToItem(item);
 		return this;
 	}
 
-	public ItemBuilder addNBTTag(Map<String, NBTBase> tags) {
+	public ItemBuilder addNBTTag(Map<String, Object> tags) {
 		if(tags==null)return this;
 		for(String str: tags.keySet()) {
 			this.addNBTTag(str, tags.get(str));

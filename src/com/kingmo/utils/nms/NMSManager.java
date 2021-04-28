@@ -6,6 +6,7 @@ import java.lang.reflect.Method;
 
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 
 public class NMSManager {
 
@@ -33,13 +34,30 @@ public class NMSManager {
 	}
 
 	public static Class<?> getCBClass(String name, String... packages) throws ClassNotFoundException {
-		StringBuilder builder = new StringBuilder("org.bukkit.craftbukkit.");
+		StringBuilder builder = new StringBuilder("org.bukkit.craftbukkit." + version);
 
 		for (String str : packages)
 			builder.append(str + ".");
 
 		return Class.forName(builder.append(name).toString());
 
+	}
+	
+	public static Object asNMSCopy(ItemStack is) throws NoSuchMethodException, SecurityException, ClassNotFoundException, IllegalAccessException, IllegalArgumentException, InvocationTargetException{
+		Class<?> itemStack = NMSManager.getCBClass("CraftItemStack", "inventory");
+		
+		Method asNMSCopy = itemStack.getMethod("asNMSCopy", ItemStack.class);
+		
+		return asNMSCopy.invoke(null, is);
+	}
+	
+	public static ItemStack asBukkitCopy(Object o) throws ClassNotFoundException, NoSuchMethodException, SecurityException, IllegalAccessException, IllegalArgumentException, InvocationTargetException {
+		
+		Class<?> itemStack = NMSManager.getCBClass("CraftItemStack", "inventory");
+		
+		Method asBukkitCopy = itemStack.getDeclaredMethod("asBukkitCopy", NMSManager.getNMSClass("ItemStack"));
+		
+		return (ItemStack) asBukkitCopy.invoke(null, o);
 	}
 
 }
