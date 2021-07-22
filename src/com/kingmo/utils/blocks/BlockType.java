@@ -17,42 +17,43 @@ public interface BlockType extends ConfigurationSerializable {
 	 */
 	public String getName();
 	/**
-	 * 
+	 *
 	 * @return The Item Name for the Block's ItemStack
 	 */
 	public String getItemName();
 
 	/**
-	 * 
+	 *
 	 * @return The Lore for the Block's ItemStack
 	 */
 	public List<String> getLore();
 
 	/**
-	 * 
+	 *
 	 * @return Whether or not the ItemStack will be glowing
 	 */
 	public boolean isGlowing();
 
 	/**
-	 * 
+	 *
 	 * @return The NBTTags for the ItemStack
 	 */
 	public Map<String, Object> getTags();
 
 	/**
-	 * 
+	 *
 	 * @return The Material for the Block's ItemStack
 	 */
 	public Material getMaterial();
 	/**
-	 * 
+	 *
 	 * @return the Block Class that defines all methods for the BlockType
 	 */
 	public Class<? extends Block> getBlockClass();
 	/**
 	 * Serializes the BlockTypes make sure all data is held in the block.
 	 */
+	@Override
 	public Map<String, Object> serialize();
 
 	/**
@@ -61,7 +62,7 @@ public interface BlockType extends ConfigurationSerializable {
 	public String getID();
 
 	public int getDelay();
-	
+
 	public boolean showName();
 
 	public default Block getBlockFromType(Location loc) throws ClassNotFoundException {
@@ -77,7 +78,7 @@ public interface BlockType extends ConfigurationSerializable {
 
 		return block;
 	}
-	
+
 	public default Map<String, Object> defSerialize(){
 		Map<String, Object> map = new HashMap<>();
 
@@ -91,7 +92,7 @@ public interface BlockType extends ConfigurationSerializable {
 		map.put("tags", NBTTagManager.castTo(this.getTags()));
 		map.put("delay", this.getDelay());
 		map.put("show", this.showName());
-		
+
 		return map;
 	}
 

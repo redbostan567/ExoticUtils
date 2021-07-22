@@ -22,8 +22,8 @@ public class RewardManager {
 	private final Rewards rewards;
 
 	/**
-	 * 
-	 * 
+	 *
+	 *
 	 * @param path
 	 * @param plugin
 	 * @param type
@@ -72,7 +72,7 @@ public class RewardManager {
 		}
 
 	}
-	
+
 	public RewardManager(String path, ConfigManager configManager, RewardType type) {
 		this(path, configManager.getPlugin(), type);
 	}

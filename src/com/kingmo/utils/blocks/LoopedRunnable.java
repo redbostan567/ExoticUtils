@@ -10,21 +10,21 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 
 public class LoopedRunnable implements Runnable, ConfigurationSerializable {
-	
+
 	private Block block;
 	private final OfflinePlayer player;
 	private final Location location;
 	private long endTime;
 	private long startTime;
-	
-	
+
+
 	public LoopedRunnable(Block block, OfflinePlayer player, Location loc) {
 		this.block = block;
 		this.player = player;
 		this.location = loc;
 		endTime = System.currentTimeMillis();
 	}
-	
+
 	public LoopedRunnable(Map<String, Object> map) {
 		this.block = (Block) map.get("block");
 		this.player = Bukkit.getOfflinePlayer(UUID.fromString((String) map.get("player")));
@@ -47,24 +47,25 @@ public class LoopedRunnable implements Runnable, ConfigurationSerializable {
 	public long getEndTime() {
 		return endTime;
 	}
-	
+
 	public long getTimeLeft() {
 		return endTime-System.currentTimeMillis();
 	}
-	
+
 	public long getStartTime() {
 		return startTime;
 	}
-	
+
+	@Override
 	public Map<String, Object> serialize(){
 		Map<String, Object> map = new HashMap<>();
-		
+
 		map.put("time", this.getTimeLeft());
 		map.put("block", block);
 		map.put("player", player.getUniqueId().toString());
 		return map;
 	}
-	
+
 	public void setBlock(Block b) {
 		this.block=b;
 	}

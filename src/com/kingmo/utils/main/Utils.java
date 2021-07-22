@@ -25,39 +25,39 @@ public class Utils {
 		Random r = new Random();
 		return r.nextInt(max + 1) <= min;
 	}
-	
+
 	public static int randomNumber(int min, int max) {
 		Random r = new Random();
 		return r.nextInt((max - min) + 1) + min;
 	}
-	
+
 	@SafeVarargs
 	public static <E> List<E> toList(E... e){
 		List<E> list = new ArrayList<>();
 		for(E e1: e)list.add(e1);
-		
+
 		return list;
 	}
-	
+
 	@SafeVarargs
 	public static <E> Set<E> toSet(E... e){
-		
+
 		Set<E> set = new HashSet<>();
-		
+
 		for(E e1: e)set.add(e1);
 		return set;
 	}
-	
+
 	public static <E> List<E> add(List<E> list, E obj){
 		list.add(obj);
 		return list;
 	}
-	
+
 	public static <E> List<E> weigh(List<E> list, E type, int amount) {
 		for(int i = 0; i < amount; i++)list.add(type);
-		return list;	
+		return list;
 	}
-	
+
 	public static Object loadData(File f) {
 		Object ob;
 		try {
@@ -75,12 +75,12 @@ public class Utils {
 		}
 
 	}
-	
+
 	public static void save(File f, Object o) {
 		ObjectOutputStream oos;
-		
+
 		System.out.println(o);
-		
+
 		try {
 			if (!f.exists())
 				f.createNewFile();
@@ -94,27 +94,34 @@ public class Utils {
 	}
 
 	public static boolean nonNull(ItemStack stack) {
-		
+
 		return stack != null ? stack.hasItemMeta() ? stack.getItemMeta().hasLore() && stack.getItemMeta().hasDisplayName() : false : false;
 	}
-	
-	
+
+
 	public static String color(String str) {
 		return ChatColor.translateAlternateColorCodes('&', str);
 	}
-	
+
 	public static List<String> toColoredList(String... e) {
 		List<String> list = new ArrayList<>();
 		for(String e1: e)list.add(Utils.color(e1));
-		
+
 		return list;
 	}
-	
+
 	public static <I> List<I> toList(Set<I> set){
 		List<I> list = new ArrayList<>();
 		for(I i: set)list.add(i);
 		return list;
 	}
-	
-	
+
+	public static boolean startsWithAny(String test, List<String> list) {
+		for(String str: list)
+			if (test.startsWith(str))return true;
+
+		return false;
+	}
+
+
 }

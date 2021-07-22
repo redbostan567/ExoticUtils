@@ -14,7 +14,7 @@ public class ConfigManager {
 
 	public ConfigManager(YamlConfiguration config, Plugin plugin) {
 		this.config = config;
-		this.plugin = plugin;		
+		this.plugin = plugin;
 	}
 
 	public ConfigManager(Plugin plugin) {

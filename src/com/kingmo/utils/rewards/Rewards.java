@@ -7,9 +7,9 @@ import org.bukkit.inventory.ItemStack;
 
 public interface Rewards {
 
-	
+
 	public ItemStack[] getReward(Player player);
-	
+
 	public Map<Reward, Double> getRewardMap();
-	
+
 }

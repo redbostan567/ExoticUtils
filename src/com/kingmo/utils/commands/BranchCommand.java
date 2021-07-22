@@ -138,7 +138,7 @@ public class BranchCommand extends Command {
 
 		for(String alias: cmd.getAliases())
 			this.cmds.put(alias, cmd);
-		
+
 		tabComplete.put(0, cmds.keySet().stream().collect(Collectors.toList()));
 	}
 
@@ -162,7 +162,7 @@ class BranchHelpCommand extends SubCommand {
 				+ this.branchCommand.getName() + branchCommand.getCOLOR_CODE_ONE() + " ------------");
 
 		Set<SubCommand> used = new HashSet<>();
-		
+
 		for (SubCommand cmd : branchCommand.getCommands().values()) {
 			if(!used.contains(cmd)) {sender.sendMessage(branchCommand.getCOLOR_CODE_TWO() + this.branchCommand.getName() + " " + cmd.getName());
 				used.add(cmd);
@@ -186,11 +186,11 @@ class BranchHelpCommand extends SubCommand {
 		manager.sendFancyMessage(top);
 
 		Set<SubCommand> used = new HashSet<>();
-		
+
 		for (SubCommand cmd : branchCommand.getCommands().values()) {
 
 			if(used.contains(cmd))continue;
-			
+
 			manager.sendFancyMessage(
 					new FancyMessage(
 							branchCommand.getCOLOR_CODE_TWO() + "/" + this.branchCommand.getName() + " "

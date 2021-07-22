@@ -77,7 +77,7 @@ public class PacketManager {
 			, IllegalArgumentException , InvocationTargetException {
 
 		try {
-			
+
 			Class<?> clazz = NMSManager.getNMSClass("IChatBaseComponent$ChatSerializer");
 
 			Method method = clazz.getDeclaredMethod("a", String.class);

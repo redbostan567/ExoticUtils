@@ -10,7 +10,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-import com.kingmo.utils.glow.Glow;	
+import com.kingmo.utils.glow.GlowNameSpaced;
 import com.kingmo.utils.main.Utils;
 import com.kingmo.utils.nbt.NBTTagManager;
 
@@ -37,7 +37,7 @@ public class ItemBuilder {
 		im.setLore(lore);
 		im.setDisplayName(displayName);
 		if (glowing)
-			im.addEnchant(new Glow(), 0, true);
+			im.addEnchant(new GlowNameSpaced(), 0, true);
 		item.setItemMeta(im);
 
 	}
@@ -85,7 +85,7 @@ public class ItemBuilder {
 	public ItemBuilder setGlow(boolean glow) {
 		ItemMeta im = item.getItemMeta();
 		if (glow)
-			im.addEnchant(new Glow(), 0, true);
+			im.addEnchant(new GlowNameSpaced(), 0, true);
 		item.setItemMeta(im);
 		return this;
 	}
@@ -102,9 +102,9 @@ public class ItemBuilder {
 		for(String str: tags.keySet()) {
 			this.addNBTTag(str, tags.get(str));
 		}
-		
+
 		return this;
-		
+
 	}
 
 	public ItemStack getItem() {

@@ -9,7 +9,7 @@ public class FileManager {
 
 	public static File createFile(File dir, String name) {
 		File newFile = new File(dir.getPath() + "/" + name);
-		
+
 		if(!newFile.exists())
 			try {
 				newFile.createNewFile();
@@ -18,14 +18,14 @@ public class FileManager {
 			}
 		return newFile;
 	}
-	
+
 	public static File getPluginDir(Plugin plugin) {
-		
+
 		File dir = plugin.getDataFolder();
-		
+
 		if(!dir.exists())dir.mkdir();
-		
-		return dir;	
+
+		return dir;
 	}
-	
+
 }

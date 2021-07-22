@@ -6,7 +6,7 @@ import java.util.List;
 public class UtilityList<I> extends ArrayList<I> {
 
 	/**
-	 * 
+	 *
 	 */
 	private static final long serialVersionUID = 1452345L;
 
@@ -39,10 +39,10 @@ public class UtilityList<I> extends ArrayList<I> {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param <E> type of data being held in the List
 	 * @param e Data held in list
-	 * @return a UtilityList of all the data given in the paramaters. 
+	 * @return a UtilityList of all the data given in the paramaters.
 	 */
 	@SafeVarargs
 	public static <E> UtilityList<E> toList(E... e) {

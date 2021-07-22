@@ -7,7 +7,7 @@ import java.util.Map;
 import com.kingmo.utils.nms.NMSManager;
 
 public class NBTString extends NBTBase<String>{
-	
+
 	public NBTString(String str) throws IllegalArgumentException, ClassNotFoundException{
 		super(str, NMSManager.getNMSClass("NBTTagString"));
 	}
@@ -32,26 +32,26 @@ public class NBTString extends NBTBase<String>{
 
 	@Override
 	public Object getAsNBT() {
-		
-		
+
+
 		try {
 			System.out.println(version);
-		switch(NBTString.version.replace(".", "").replace("v", "")) {
-		
+		switch(NBTBase.version.replace(".", "").replace("v", "")) {
+
 		case "1_16_R3":
 			return this.getNbtTagClass().getDeclaredMethod("a", String.class).invoke(null, this.getData());
-		
+
 		case "1_8_R3":
 			return this.getNbtTagClass().getDeclaredConstructor(String.class).newInstance(this.getData());
 
 		}
-		
+
 		}catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException | InstantiationException e) {
-			
+
 			e.printStackTrace();
 		}
-		
+
 		return null;
 	}
 

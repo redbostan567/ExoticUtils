@@ -34,7 +34,7 @@ public abstract class Block implements ConfigurationSerializable {
 	private ArmorStand stand;
 
 	protected Map<Player, InventoryManager> invs = new HashMap<>();
-	
+
 	/**
 	 * Dictates whether or not the block exists in the world.
 	 */
@@ -99,9 +99,10 @@ public abstract class Block implements ConfigurationSerializable {
 
 	/**
 	 * @apiNote Do not use, needed only for serialization.
-	 * 
+	 *
 	 * @return serialized map of all objects in the code
 	 */
+	@Override
 	public Map<String, Object> serialize() {
 		Map<String, Object> map = new HashMap<>();
 
@@ -115,7 +116,7 @@ public abstract class Block implements ConfigurationSerializable {
 
 	/**
 	 * Gives the bukkit block this custom block refers to.
-	 * 
+	 *
 	 * @return the bukkit block at the location the custom block is at
 	 */
 	public org.bukkit.block.Block getBlock() {
@@ -124,7 +125,7 @@ public abstract class Block implements ConfigurationSerializable {
 
 	/**
 	 * Gives the type of block this custom block refers to.
-	 * 
+	 *
 	 * @return the type of block.
 	 */
 	public BlockType getType() {
@@ -132,7 +133,7 @@ public abstract class Block implements ConfigurationSerializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param type : the new type of block.
 	 * @apiNote Do not use if not in an abstraction.
 	 */
@@ -159,7 +160,7 @@ public abstract class Block implements ConfigurationSerializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param is : the item stack trying to be placed.
 	 * @return returns true if the item stack is the item stack contains the NBT tag
 	 *         block ID.
@@ -171,7 +172,7 @@ public abstract class Block implements ConfigurationSerializable {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param t : The type of block's ItemStack being created.
 	 * @return the ItemStack of the given BlockType
 	 */
@@ -186,7 +187,7 @@ public abstract class Block implements ConfigurationSerializable {
 		}
 	}
 
-	
+
 	/**
 	 * @apiNote I decided not to delete the object upon breakage of the block, so instead heres this method.
 	 * @return whether or not the block is currently broken.
@@ -197,20 +198,22 @@ public abstract class Block implements ConfigurationSerializable {
 
 	/**
 	 * @apiNote Do not use unless you are sure the block is broken
-	 * @param broke 
+	 * @param broke
 	 */
 	public void setBroken(boolean broke) {
 		this.broken = broke;
 	}
 
 	/**
-	 * 
+	 *
 	 * @return display name of the item
 	 */
 	public String getName() {
 		return this.getType().getItemName();
 	}
-
+	
+	
+	@Deprecated
 	public void setArmorStand(ArmorStand stand) {
 		this.stand = stand;
 	}
@@ -218,7 +221,7 @@ public abstract class Block implements ConfigurationSerializable {
 	public ArmorStand getArmorStand() {
 		return stand;
 	}
-	
+
 	public boolean onBlockClick(Action a, Player player) {
 		return false;
 	}

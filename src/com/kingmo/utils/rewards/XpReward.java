@@ -8,11 +8,11 @@ import com.kingmo.utils.xp.ExpManager;
 public class XpReward implements Reward{
 
 	private int xp;
-	
+
 	public XpReward(int xp) {
 		this.xp = xp;
 	}
-	
+
 	@Override
 	public ItemStack[] reward(Player player) {
 		ExpManager manager = new ExpManager(player);

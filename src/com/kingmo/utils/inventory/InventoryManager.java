@@ -18,19 +18,19 @@ public class InventoryManager{
 	private InventorySerializable mainInv;
 	private Player player;
 	private static List<Inventory> noClickList = new ArrayList<>();
-	
+
 	public InventoryManager(Player player) {
 		this(Bukkit.createInventory(null, 9*6), player);
 	}
-	
+
 	public InventoryManager(Inventory inv, Player player) {
 		inventories = new HashMap<>();
 		clickThroughMap = new HashMap<>();
-		
+
 		mainInv = new InventorySerializable(inv);
-		
+
 		this.player = player;
-		
+
 	}
 
 	public void addInvententoryToLevel(int level, Inventory i) {
@@ -60,7 +60,7 @@ public class InventoryManager{
 
 			clickThroughMap.put(level - 1, itemToInv);
 		}
-		
+
 		inventories.put(level, list);
 	}
 
@@ -73,31 +73,31 @@ public class InventoryManager{
 
 		return finalList;
 	}
-	
+
 	public Inventory getFirstInventory() {
 		return mainInv.createInventory();
 	}
-	
+
 	public Inventory openFirstInventory() {
 		player.openInventory(mainInv.createInventory());
 		return mainInv.createInventory();
 	}
-	
+
 	public Inventory openInventoryByItemStack(ItemStack is) {
 		Inventory in = this.clickThroughMap.get(currentLevel).get(is).createInventory();
 		player.openInventory(in);
 		currentLevel++;
 		return in;
 	}
-	
+
 	public static void addNoClick(Inventory inv) {
 		InventoryManager.noClickList.add(inv);
 	}
-	
+
 	public static boolean isClickable(Inventory inv) {
 		return !InventoryManager.noClickList.contains(inv);
 	}
-	
-	
+
+
 
 }

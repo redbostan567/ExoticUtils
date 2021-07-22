@@ -20,7 +20,7 @@ import com.kingmo.utils.blocks.BlockType;
 import com.kingmo.utils.blocks.GiveBlockCommand;
 import com.kingmo.utils.blocks.LoopedRunnable;
 import com.kingmo.utils.commands.CommandManager;
-import com.kingmo.utils.glow.Glow;
+import com.kingmo.utils.glow.GlowNameSpaced;
 import com.kingmo.utils.inventory.InventoryListener;
 import com.kingmo.utils.inventory.InventorySerializable;
 import com.kingmo.utils.nbt.NBTBase;
@@ -39,8 +39,8 @@ public class ExoticUtilityMain extends JavaPlugin {
 	private static Map<Location, LoopedRunnable> loopMap;
 
 	private CommandManager cmdManager;
-	
-	private Glow glow;
+
+	private GlowNameSpaced glow;
 
 	static {
 		ConfigurationSerialization.registerClass(Block.class);
@@ -50,36 +50,37 @@ public class ExoticUtilityMain extends JavaPlugin {
 		ConfigurationSerialization.registerClass(InventorySerializable.class);
 	}
 
+	@Override
 	public void onEnable() {
 
 		registerEvents();
-		
+
 		registerEnchants();
-		
+
 		createSaveFiles();
-		
+
 		log.info("Loading commands");
 
 		cmdManager = new CommandManager(this);
-		
+
 		this.loadCommands();
-		
+
 		//TestMain.test();
 
-		
+
 		log.info("ExoticUtils enabled");
 
 	}
 
 	private void registerEnchants() {
-		glow = new Glow();
-		
+		glow = new GlowNameSpaced();
+
 		ExoticUtilityMain.registerEnchantment(glow);
 	}
 
 	private void registerEvents() {
 		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
-		
+
 	}
 
 	public void loadAPI() {
@@ -89,10 +90,10 @@ public class ExoticUtilityMain extends JavaPlugin {
 
 		BlockListener.loadStands();
 	}
-	
+
 	private void loadCommands() {
 		cmdManager.registerCommand(new GiveBlockCommand());
-		
+
 	}
 
 	public CommandManager getCommandManager() {
@@ -105,10 +106,11 @@ public class ExoticUtilityMain extends JavaPlugin {
 		loopFile = FileManager.createFile(folder, loops);
 	}
 
+	@Override
 	public void onDisable() {
 
 		unregisterEnchants();
-		
+
 		BlockListener.clearStands();
 
 		log.info("Saving stored data");
@@ -134,7 +136,7 @@ public class ExoticUtilityMain extends JavaPlugin {
 
 		 active = (Map<Location, Block>) Utils.loadData(blockFile) == null ? new HashMap<>()
 				: (Map<Location, Block>) Utils.loadData(blockFile);
-	
+
 		Bukkit.getPluginManager().registerEvents(new BlockListener(active), this);
 
 		loopMap = (Map<Location, LoopedRunnable>) Utils.loadData(loopFile) == null ? new HashMap<>()
@@ -163,33 +165,33 @@ public class ExoticUtilityMain extends JavaPlugin {
 	public static void removeLoop(Location loc) {
 		loopMap.remove(loc);
 	}
-	
+
 	private void unregisterEnchants() {
 		ExoticUtilityMain.unregisterEnchantment(glow);
 	}
-	
+
 	@SuppressWarnings("deprecation")
 	public static void unregisterEnchantment(Enchantment ench) {
 		try {
 			Field byIdField = Enchantment.class.getDeclaredField("byKey");
 			Field byNameField = Enchantment.class.getDeclaredField("byName");
-			 
+
 			byIdField.setAccessible(true);
 			byNameField.setAccessible(true);
-			 
+
 			@SuppressWarnings("unchecked")
 			HashMap<NamespacedKey, Enchantment> byId = (HashMap<NamespacedKey, Enchantment>) byIdField.get(null);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Enchantment> byName = (HashMap<String, Enchantment>) byNameField.get(null);
-			 
+
 			if(byId.containsKey(ench.getKey()))
 			byId.remove(ench.getKey());
-			 
+
 			if(byName.containsKey(ench.getName()))
 			byName.remove(ench.getName());
 			} catch (Exception ignored) { }
 	}
-	
+
 	 public static void registerEnchantment(Enchantment enchantment) {
 	        boolean registered = true;
 	        try {

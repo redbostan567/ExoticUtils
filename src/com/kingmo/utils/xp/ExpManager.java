@@ -5,10 +5,10 @@ import org.bukkit.entity.Player;
 public class ExpManager
 {
   private Player player;
-  
+
   public ExpManager(Player player) { this.player = player; }
 
-  
+
   public int getTotalExperience() {
     int experience = 0;
     int level = this.player.getLevel();
@@ -17,14 +17,14 @@ public class ExpManager
       int requiredExperience = 2 * level + 7;
       double currentExp = Double.parseDouble(Float.toString(this.player.getExp()));
       return (int)(experience + Math.ceil(currentExp * requiredExperience));
-    } 
+    }
     if (level > 15 && level <= 30) {
       experience = (int)Math.ceil(2.5D * Math.pow(level, 2.0D) - 40.5D * level + 360.0D);
       int requiredExperience = 5 * level - 38;
       double currentExp = Double.parseDouble(Float.toString(this.player.getExp()));
       return (int)(experience + Math.ceil(currentExp * requiredExperience));
-    } 
-    
+    }
+
     experience = (int)Math.ceil(4.5D * Math.pow(level, 2.0D) - 162.5D * level + 2220.0D);
     int requiredExperience = 9 * level - 158;
     double currentExp = Double.parseDouble(Float.toString(this.player.getExp()));
@@ -44,7 +44,7 @@ public class ExpManager
       }
       return xp;
   }
-  
+
   public void setTotalExperience(int amount) {
       int level = 0;
       int xp = 0;
@@ -70,10 +70,10 @@ public class ExpManager
       player.setExp(0);
       player.giveExp(xp);
   }
-  
+
   public void addXp(int amount) {
 	  this.setTotalExperience(this.getTotalExperience() + amount);
   }
-  
+
 
 }

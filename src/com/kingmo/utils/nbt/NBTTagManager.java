@@ -26,18 +26,18 @@ public class NBTTagManager {
 	}
 
 	public NBTTagManager(ItemStack is) {
-		
+
 		try {
 			nmsItem = NMSManager.getNMSClass("ItemStack");
-			
+
 			Method getTag = nmsItem.getMethod("getTag");
 
 			tag = getTag.invoke(NMSManager.asNMSCopy(is));
-			
+
 			if(tag == null) {
 				tag = createNewTag();
 			}
-			
+
 
 		} catch (ClassNotFoundException | NoSuchMethodException | SecurityException | IllegalAccessException
 				| IllegalArgumentException | InvocationTargetException | InstantiationException e) {
@@ -59,17 +59,17 @@ public class NBTTagManager {
 			if(tag == null) {
 				tag = this.createNewTag();
 			}
-			
+
 			Class<?> nbtTagCompound = NMSManager.getNMSClass("NBTTagCompound");
 
 			Method a = nbtTagCompound.getDeclaredMethod("a", nbtTagCompound);
 
 			System.out.println(this.getTag() + "class tag");
-			
+
 			a.invoke(tag, this.getTag());
 
 			System.out.println(tag);
-			
+
 			Method setTag = nmsItem.getMethod("setTag", nbtTagCompound);
 
 			setTag.invoke(itemStack, tag);
@@ -95,7 +95,7 @@ public class NBTTagManager {
 			Class<?> base = NMSManager.getNMSClass("NBTBase");
 
 			System.out.println(tag);
-			
+
 			this.tag.getClass()
 			.getMethod("set", String.class, base)
 			.invoke(this.tag, name, nbt);
@@ -153,10 +153,10 @@ public class NBTTagManager {
 	 * TODO: Have to make it work w/ reflection CBA rn public Entity
 	 * addTagToEntity(Entity entity) { net.minecraft.server.v1_8_R3.Entity nmsEntity
 	 * = ((CraftEntity) entity).getHandle();
-	 * 
+	 *
 	 * NBTTagCompound tag = nmsEntity.getNBTTag(); tag.a(this.tag);
 	 * nmsEntity.f(tag);
-	 * 
+	 *
 	 * return CraftEntity.getEntity((CraftServer) Bukkit.getServer(), nmsEntity); }
 	 */
 
@@ -196,7 +196,7 @@ public class NBTTagManager {
 		// TODO Auto-generated method stub
 		return null;
 	}
-	
+
 	public static Map<String, Object> cast(Map<String, String> tag){
 		return null;
 	}

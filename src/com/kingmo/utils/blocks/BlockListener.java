@@ -23,12 +23,12 @@ import com.kingmo.utils.main.ExoticUtilityMain;
 import com.kingmo.utils.main.Utils;
 
 /**
- * 
+ *
  * Handles all custom block placement and breaking. <br>
  * </br>
  * To use register {@link BlockType} using
  * {@link BlockListener#registerBlock(BlockType)}
- * 
+ *
  * @author Kingmo100
  * @since V1.0
  */
@@ -36,8 +36,8 @@ public class BlockListener implements Listener {
 
 	private static Map<String, BlockType> registeredBlocks = new HashMap<>();
 	private static Map<Location, Block> activeBlocks = new HashMap<>();
-	
-	
+
+
 	public BlockListener(List<BlockType> type) {
 
 		for (BlockType t : type) {
@@ -57,9 +57,9 @@ public class BlockListener implements Listener {
 	public void onBlockPlace(BlockPlaceEvent e) {
 
 		ItemStack stack = e.getItemInHand();
-		
+
 		Player player = e.getPlayer();
-	
+
 		if (!Utils.nonNull(stack))
 			return;
 
@@ -87,11 +87,11 @@ public class BlockListener implements Listener {
 
 		//calls on place not much difference between run and place unless your using a looped without redefining looped.
 		block.onPlace(e.getPlayer());
-		
-		
+
+
 		//adds loop for serialization
 		ExoticUtilityMain.addLoop(loc, loop);
-		
+
 		//adds block to map for serialization
 		activeBlocks.put(loc, block);
 	}
@@ -114,18 +114,18 @@ public class BlockListener implements Listener {
 		//breaks the item in the actual game and drops custom item.
 		e.getBlock().setType(Material.AIR);
 		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE))loc.getWorld().dropItemNaturally(loc, Block.createItemStack(block.getType()));
-		
+
 		//Kills armor stand if the name is shown
 		if(block.getType().showName())
 		block.getArmorStand().remove();
 		block.setArmorStand(null);
-		
-		
+
+
 		//removes the block from all registrys
 		ExoticUtilityMain.removeLoop(loc);
 		activeBlocks.remove(loc);
 	}
-	
+
 	/**
 	 * Clears all active armor stands for reboot.
 	 */
@@ -137,7 +137,7 @@ public class BlockListener implements Listener {
 		}
 	}
 
-	
+
 	/**
 	 * <blockquote>
 	 * Use this to register any blocks
@@ -156,7 +156,7 @@ public class BlockListener implements Listener {
 
 	}
 
-	
+
 	/**
 	 * Registers all block in a list.
 	 * @param types a list of all blocks being registered
@@ -166,7 +166,7 @@ public class BlockListener implements Listener {
 		for (BlockType type : types)
 			BlockListener.registerBlock(type);
 	}
-	
+
 	public static void registerBlocks(BlockType[] types) {
 
 		for (BlockType type : types)
@@ -191,7 +191,7 @@ public class BlockListener implements Listener {
 		as.setCustomName(block.getName());
 		as.setCustomNameVisible(true);
 		as.setGravity(false);
-		
+
 		block.setArmorStand(as);
 	}
 
@@ -204,28 +204,28 @@ public class BlockListener implements Listener {
 				BlockListener.addArmorStand(b);
 			}
 		}
-		
+
 	}
 
 	public static BlockType getBlock(String string) {
 		return registeredBlocks.get(string);
 	}
-	
+
 	@EventHandler
 	public void onBlockInteract(PlayerInteractEvent e) {
 		if(e.getClickedBlock() == null)return;
-		
+
 		Location loc = e.getClickedBlock().getLocation();
-		
+
 		if(!activeBlocks.containsKey(loc))return;
-		
+
 		Block block = activeBlocks.get(loc);
-		
+
 		e.setCancelled(block.onBlockClick(e.getAction(), e.getPlayer()));
-		
+
 	}
-	
-	
-	
+
+
+
 
 }
