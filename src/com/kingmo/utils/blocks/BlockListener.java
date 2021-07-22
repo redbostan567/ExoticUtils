@@ -8,6 +8,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
@@ -15,6 +16,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import com.kingmo.utils.main.ExoticUtilityMain;
@@ -148,6 +150,8 @@ public class BlockListener implements Listener {
 		if (registeredBlocks.containsKey(key))
 			return false;
 		registeredBlocks.put(key, type);
+		registeredBlocks.put(type.getID().toUpperCase().replace(" ", "_"), type);
+		ConfigurationSerialization.registerClass(type.getBlockClass());
 		return true;
 
 	}
@@ -158,6 +162,12 @@ public class BlockListener implements Listener {
 	 * @param types a list of all blocks being registered
 	 */
 	public static void registerBlocks(List<BlockType> types) {
+
+		for (BlockType type : types)
+			BlockListener.registerBlock(type);
+	}
+	
+	public static void registerBlocks(BlockType[] types) {
 
 		for (BlockType type : types)
 			BlockListener.registerBlock(type);
@@ -196,5 +206,26 @@ public class BlockListener implements Listener {
 		}
 		
 	}
+
+	public static BlockType getBlock(String string) {
+		return registeredBlocks.get(string);
+	}
+	
+	@EventHandler
+	public void onBlockInteract(PlayerInteractEvent e) {
+		if(e.getClickedBlock() == null)return;
+		
+		Location loc = e.getClickedBlock().getLocation();
+		
+		if(!activeBlocks.containsKey(loc))return;
+		
+		Block block = activeBlocks.get(loc);
+		
+		e.setCancelled(block.onBlockClick(e.getAction(), e.getPlayer()));
+		
+	}
+	
+	
+	
 
 }

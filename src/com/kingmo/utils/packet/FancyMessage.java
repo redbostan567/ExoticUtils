@@ -1,5 +1,7 @@
 package com.kingmo.utils.packet;
 
+import org.bukkit.command.CommandSender;
+
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
 import net.md_5.bungee.api.chat.HoverEvent;
@@ -18,9 +20,10 @@ public class FancyMessage {
 		this(basicMessage, command, action, HoverEvent.Action.SHOW_TEXT, hoverText);
 	}
 	
+	@SuppressWarnings("deprecation")
 	public FancyMessage(String basicMessage, String command, ClickEvent.Action click, HoverEvent.Action hover, String... hoverText) {
 		TextComponent comp = new TextComponent(TextComponent.fromLegacyText(basicMessage));
-		comp.setClickEvent(new ClickEvent(click, command));
+		if(command!=null)comp.setClickEvent(new ClickEvent(click, command));
 		
 		StringBuilder builder = new StringBuilder();
 		
@@ -31,13 +34,17 @@ public class FancyMessage {
 		}
 		builder.append(hoverText[max]);
 		this.hover = new HoverEvent(hover, new ComponentBuilder(builder.toString()).create());
-		comp.setHoverEvent(this.hover);
+		if(hover!=null)comp.setHoverEvent(this.hover);
 		
 		this.component = comp;
 	}
 	
 	public TextComponent getComponent() {
 		return component;
+	}
+	
+	public void sendMessage(CommandSender player) {
+		player.spigot().sendMessage(this.getComponent());
 	}
 	
 }

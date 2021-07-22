@@ -26,7 +26,7 @@ public class CommandManager {
 			"&4&lThis command is only for in-game players and thus you cannot use it. Please go in-game and try again."));
 
 	public static final String INCORRECT_USAGE = config.getStringOrDefault("incorrect-usage-message", Utils.color(
-			"&4&lYou have made an error when typing this command. Please use /[command] help in order to find avaiable aliases and their uses."));
+			"&4&lYou have made an error when typing this command. Please use /[command] help in order to find available aliases and their uses."));
 
 	private static SimpleCommandMap COMMAND_REGISTER;
 
@@ -80,6 +80,10 @@ public class CommandManager {
 
 	public List<Command> getCommands() {
 		return commands;
+	}
+
+	public static String get(Command cmd, String string) {
+		return string.replace("[command]", cmd.getName());
 	}
 
 }

@@ -17,6 +17,8 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
 
+
+
 public class Utils {
 
 	public static boolean random(int min, int max) {
@@ -99,6 +101,19 @@ public class Utils {
 	
 	public static String color(String str) {
 		return ChatColor.translateAlternateColorCodes('&', str);
+	}
+	
+	public static List<String> toColoredList(String... e) {
+		List<String> list = new ArrayList<>();
+		for(String e1: e)list.add(Utils.color(e1));
+		
+		return list;
+	}
+	
+	public static <I> List<I> toList(Set<I> set){
+		List<I> list = new ArrayList<>();
+		for(I i: set)list.add(i);
+		return list;
 	}
 	
 	

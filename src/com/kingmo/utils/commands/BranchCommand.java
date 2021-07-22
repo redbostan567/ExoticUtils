@@ -2,8 +2,10 @@ package com.kingmo.utils.commands;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 import org.bukkit.Location;
@@ -39,43 +41,44 @@ public class BranchCommand extends Command {
 			List<SubCommand> cmd, String colorOne, String colorTwo) {
 		super(name, aliases, description, usage, permission);
 
+		this.COLOR_CODE_ONE = colorOne;
+		this.COLOR_CODE_TWO = colorTwo;
+
 		this.cmds = new HashMap<>();
 
 		for (SubCommand sub : cmd) {
 
 			cmds.put(sub.getName(), sub);
 
+			sub.setColorOne(colorOne);
+			sub.setColorTwo(colorTwo);
+
 			for (String alias : sub.getAliases())
 				cmds.put(alias, sub);
 
 		}
 
-		this.COLOR_CODE_ONE = colorOne;
-		this.COLOR_CODE_TWO = colorTwo;
-
 		cmds.put("help", new BranchHelpCommand(this));
 
-		tabComplete.put(0, 
-				cmds.keySet().stream().collect(Collectors.toList()));
-		
-		System.out.println(tabComplete);
+		tabComplete.put(0, cmds.keySet().stream().collect(Collectors.toList()));
+
 	}
 
 	@Override
 	public List<String> tabComplete(CommandSender sender, String alias, String[] args) {
-		if (args.length <= 1)
-			return this.testPermission(sender) ? tabComplete.get(args.length - 1) : new ArrayList<>();
 
-		if (!cmds.containsKey(args[0]))
-			return new ArrayList<>();
+		if (cmds.containsKey(args[0])) {
 
-		SubCommand cmd = cmds.get(args[0]);
+			SubCommand cmd = cmds.get(args[0]);
 
-		Map<Integer, List<String>> tab2 = cmd.getTabComplete();
-		Map<Integer, List<String>> tabComplete = this.tabComplete;
-		
-		for (int i : tab2.keySet()) {
-			tabComplete.put(i + 1, tab2.get(i));
+			Map<Integer, List<String>> tab2 = cmd.isConcurrentUpdatingTabComplete() ? cmd.getUpdatedTabComplete()
+					: cmd.getTabComplete();
+			Map<Integer, List<String>> tabComplete = this.tabComplete;
+
+			for (int i : tab2.keySet()) {
+				tabComplete.put(i + 1, tab2.get(i));
+			}
+
 		}
 
 		return tabComplete.getOrDefault(args.length - 1, new ArrayList<>());
@@ -128,9 +131,15 @@ public class BranchCommand extends Command {
 	}
 
 	protected void addSubCommand(SubCommand cmd) {
+		cmd.setColorOne(COLOR_CODE_ONE);
+		cmd.setColorTwo(COLOR_CODE_TWO);
+
 		this.cmds.put(cmd.getName(), cmd);
-		tabComplete.put(0, 
-				cmds.keySet().stream().collect(Collectors.toList()));
+
+		for(String alias: cmd.getAliases())
+			this.cmds.put(alias, cmd);
+		
+		tabComplete.put(0, cmds.keySet().stream().collect(Collectors.toList()));
 	}
 
 }
@@ -152,8 +161,13 @@ class BranchHelpCommand extends SubCommand {
 		sender.sendMessage(branchCommand.getCOLOR_CODE_ONE() + "------------ " + branchCommand.getCOLOR_CODE_TWO()
 				+ this.branchCommand.getName() + branchCommand.getCOLOR_CODE_ONE() + " ------------");
 
-		for (SubCommand cmd : branchCommand.getCommands().values())
-			sender.sendMessage(branchCommand.getCOLOR_CODE_TWO() + this.branchCommand.getName() + " " + cmd.getName());
+		Set<SubCommand> used = new HashSet<>();
+		
+		for (SubCommand cmd : branchCommand.getCommands().values()) {
+			if(!used.contains(cmd)) {sender.sendMessage(branchCommand.getCOLOR_CODE_TWO() + this.branchCommand.getName() + " " + cmd.getName());
+				used.add(cmd);
+			}
+		}
 
 		sender.sendMessage(branchCommand.getCOLOR_CODE_ONE() + "------------------------------");
 		return true;
@@ -171,15 +185,19 @@ class BranchHelpCommand extends SubCommand {
 
 		manager.sendFancyMessage(top);
 
+		Set<SubCommand> used = new HashSet<>();
+		
 		for (SubCommand cmd : branchCommand.getCommands().values()) {
 
+			if(used.contains(cmd))continue;
+			
 			manager.sendFancyMessage(
 					new FancyMessage(
 							branchCommand.getCOLOR_CODE_TWO() + "/" + this.branchCommand.getName() + " "
 									+ cmd.getName(),
 							"/" + this.branchCommand.getName() + " " + cmd.getName(), ClickEvent.Action.SUGGEST_COMMAND,
 							this.formatHover(cmd)));
-
+			used.add(cmd);
 		}
 
 		player.sendMessage(branchCommand.getCOLOR_CODE_ONE() + "------------------------------");

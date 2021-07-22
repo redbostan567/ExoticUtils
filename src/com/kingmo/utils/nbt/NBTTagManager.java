@@ -4,7 +4,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Map;
 
-import org.bukkit.craftbukkit.v1_8_R3.inventory.CraftItemStack;
 import org.bukkit.inventory.ItemStack;
 
 import com.kingmo.utils.nms.NMSManager;
@@ -27,8 +26,6 @@ public class NBTTagManager {
 	}
 
 	public NBTTagManager(ItemStack is) {
-		
-		System.out.println(CraftItemStack.class);
 		
 		try {
 			nmsItem = NMSManager.getNMSClass("ItemStack");
@@ -197,6 +194,10 @@ public class NBTTagManager {
 
 	public static Map<String, String> castTo(Map<String, Object> tags) {
 		// TODO Auto-generated method stub
+		return null;
+	}
+	
+	public static Map<String, Object> cast(Map<String, String> tag){
 		return null;
 	}
 

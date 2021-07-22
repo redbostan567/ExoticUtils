@@ -3,6 +3,4 @@ description: Utilities for plugins
 author: Kingmo100 
 version: 1.0
 main: com.kingmo.utils.main.ExoticUtilityMain
-commands:
-   test: 
-      description: testing
+api-version: 1.16

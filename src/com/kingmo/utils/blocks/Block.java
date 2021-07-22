@@ -8,8 +8,10 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.configuration.serialization.ConfigurationSerializable;
 import org.bukkit.entity.ArmorStand;
 import org.bukkit.entity.Player;
+import org.bukkit.event.block.Action;
 import org.bukkit.inventory.ItemStack;
 
+import com.kingmo.utils.inventory.InventoryManager;
 import com.kingmo.utils.item.ItemBuilder;
 import com.kingmo.utils.main.Utils;
 import com.kingmo.utils.nbt.NBTString;
@@ -31,6 +33,8 @@ public abstract class Block implements ConfigurationSerializable {
 
 	private ArmorStand stand;
 
+	protected Map<Player, InventoryManager> invs = new HashMap<>();
+	
 	/**
 	 * Dictates whether or not the block exists in the world.
 	 */
@@ -63,7 +67,7 @@ public abstract class Block implements ConfigurationSerializable {
 
 		this.loc = loc;
 		this.type = type;
-		this.deserialize(ser);
+		this.deserializing(ser);
 
 	}
 
@@ -89,7 +93,7 @@ public abstract class Block implements ConfigurationSerializable {
 		return map;
 	}
 
-	public void deserialize(Map<String, Object> map) {
+	public void deserializing(Map<String, Object> map) {
 
 	}
 
@@ -151,7 +155,7 @@ public abstract class Block implements ConfigurationSerializable {
 	 * @param place : the player who places the block.
 	 */
 	public void onPlace(Player place) {
-		place.sendMessage(Utils.color("&c&lYou have placed a custom block"));
+		//place.sendMessage(Utils.color("&c&lYou have placed a custom block"));
 	}
 
 	/**
@@ -173,8 +177,13 @@ public abstract class Block implements ConfigurationSerializable {
 	 */
 
 	public static ItemStack createItemStack(BlockType t) {
-		return new ItemBuilder(t.getItemName(), t.getMaterial(), t.getLore()).setGlow(t.isGlowing())
-				.addNBTTag(t.getTags()).addNBTTag("block-id", new NBTString(t.getID())).getItem();
+		try {
+			return new ItemBuilder(t.getItemName(), t.getMaterial(), t.getLore()).setGlow(t.isGlowing())
+					.addNBTTag(t.getTags()).addNBTTag("block-id", new NBTString(t.getID()).getAsNBT()).getItem();
+		} catch (IllegalArgumentException | ClassNotFoundException e) {
+			e.printStackTrace();
+			return null;
+		}
 	}
 
 	
@@ -209,5 +218,10 @@ public abstract class Block implements ConfigurationSerializable {
 	public ArmorStand getArmorStand() {
 		return stand;
 	}
+	
+	public boolean onBlockClick(Action a, Player player) {
+		return false;
+	}
+
 
 }

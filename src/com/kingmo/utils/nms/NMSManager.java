@@ -1,12 +1,15 @@
-package com.kingmo.utils.nms;
+ package com.kingmo.utils.nms;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 
 import org.bukkit.Bukkit;
+import org.bukkit.NamespacedKey;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+
+import com.kingmo.utils.main.ExoticUtilityMain;
 
 public class NMSManager {
 
@@ -58,6 +61,27 @@ public class NMSManager {
 		Method asBukkitCopy = itemStack.getDeclaredMethod("asBukkitCopy", NMSManager.getNMSClass("ItemStack"));
 		
 		return (ItemStack) asBukkitCopy.invoke(null, o);
+	}
+
+	public static Object getGlowEnchantID() {
+		switch(version) {
+		
+		case "v1_8_R3":
+			return 40;
+		case "v1_16_R3":
+			return new NamespacedKey(ExoticUtilityMain.getInstance(), "exotic_glow");
+		default :
+			return new NamespacedKey(ExoticUtilityMain.getInstance(), "exotic_glow");
+		}
+		
+	}
+
+	public static Class<?> glowClass() {
+		return null;
+	}
+
+	public static String getVersion() {
+		return NMSManager.version;
 	}
 
 }
