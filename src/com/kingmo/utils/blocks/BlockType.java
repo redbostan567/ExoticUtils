@@ -16,6 +16,7 @@ public interface BlockType extends ConfigurationSerializable {
 	 * @return The Name put in maps for the block. Relatively unused
 	 */
 	public String getName();
+
 	/**
 	 *
 	 * @return The Item Name for the Block's ItemStack
@@ -45,11 +46,13 @@ public interface BlockType extends ConfigurationSerializable {
 	 * @return The Material for the Block's ItemStack
 	 */
 	public Material getMaterial();
+
 	/**
 	 *
 	 * @return the Block Class that defines all methods for the BlockType
 	 */
 	public Class<? extends Block> getBlockClass();
+
 	/**
 	 * Serializes the BlockTypes make sure all data is held in the block.
 	 */
@@ -61,15 +64,30 @@ public interface BlockType extends ConfigurationSerializable {
 	 */
 	public String getID();
 
+	/**
+	 * 
+	 * @return Returns delay between runs of the block. See
+	 *         {@link Block#loopedRun(Location, org.bukkit.OfflinePlayer)}
+	 */
 	public int getDelay();
 
+	/**
+	 * 
+	 * @return Returns whether or not an invisible {@link ArmorStand} will appear
+	 *         and act a name tag above the block
+	 */
 	public boolean showName();
 
+	/**
+	 * 
+	 * @param loc: location at which this new block will be found
+	 * @return a Block at specified location of specified type.
+	 * @throws ClassNotFoundException thrown if there is no legal block type
+	 */
 	public default Block getBlockFromType(Location loc) throws ClassNotFoundException {
 		Block block = null;
 		try {
-			block = this.getBlockClass().getDeclaredConstructor(Location.class, BlockType.class).newInstance(loc,
-					this);
+			block = this.getBlockClass().getDeclaredConstructor(Location.class, BlockType.class).newInstance(loc, this);
 		} catch (InstantiationException | IllegalAccessException | IllegalArgumentException | InvocationTargetException
 				| NoSuchMethodException | SecurityException e1) {
 			e1.printStackTrace();
@@ -79,7 +97,11 @@ public interface BlockType extends ConfigurationSerializable {
 		return block;
 	}
 
-	public default Map<String, Object> defSerialize(){
+	/**
+	 * 
+	 * @return a map with a majority of must-have serialized objects, serialized.
+	 */
+	public default Map<String, Object> defSerialize() {
 		Map<String, Object> map = new HashMap<>();
 
 		map.put("class", this.getBlockClass());

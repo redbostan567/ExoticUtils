@@ -8,7 +8,10 @@ public class ExpManager
 
   public ExpManager(Player player) { this.player = player; }
 
-
+  /**
+   * 
+   * @return the players total experience.
+   */
   public int getTotalExperience() {
     int experience = 0;
     int level = this.player.getLevel();

@@ -37,7 +37,6 @@ public class BlockListener implements Listener {
 	private static Map<String, BlockType> registeredBlocks = new HashMap<>();
 	private static Map<Location, Block> activeBlocks = new HashMap<>();
 
-
 	public BlockListener(List<BlockType> type) {
 
 		for (BlockType t : type) {
@@ -63,7 +62,7 @@ public class BlockListener implements Listener {
 		if (!Utils.nonNull(stack))
 			return;
 
-		//Decides whether or not the block in the players hand is a custom block
+		// Decides whether or not the block in the players hand is a custom block
 		BlockType blockType = registeredBlocks.getOrDefault(stack.getItemMeta().getDisplayName(), null);
 		if (blockType == null)
 			return;
@@ -73,55 +72,56 @@ public class BlockListener implements Listener {
 		Block block = null;
 		try {
 			block = blockType.getBlockFromType(loc);
-			//creates the custom block instance
+			// creates the custom block instance
 		} catch (ClassNotFoundException e1) {
 			e1.printStackTrace();
 		}
 
 		block.run(loc, player);
-		//runs the custom block and then decides if its a looped custom block
+		// runs the custom block and then decides if its a looped custom block
 		LoopedRunnable loop = new LoopedRunnable(block, player, loc);
 		if (blockType.getDelay() > 0)
-			Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ExoticUtils"),
-					loop, block.getType().getDelay());
+			Bukkit.getScheduler().scheduleSyncDelayedTask(Bukkit.getPluginManager().getPlugin("ExoticUtils"), loop,
+					block.getType().getDelay());
 
-		//calls on place not much difference between run and place unless your using a looped without redefining looped.
+		// calls on place not much difference between run and place unless your using a
+		// looped without redefining looped.
 		block.onPlace(e.getPlayer());
 
-
-		//adds loop for serialization
+		// adds loop for serialization
 		ExoticUtilityMain.addLoop(loc, loop);
 
-		//adds block to map for serialization
+		// adds block to map for serialization
 		activeBlocks.put(loc, block);
 	}
 
+	@SuppressWarnings("deprecation")
 	@EventHandler
 	public void onBlockBreak(BlockBreakEvent e) {
 		Location loc = e.getBlock().getLocation();
-		//decides whether or not the block broken is a custom block
+		// decides whether or not the block broken is a custom block
 		if (!activeBlocks.containsKey(loc))
 			return;
 
-		//gets block instance
+		// gets block instance
 		Block block = activeBlocks.get(loc);
 
-		//destroys block so looped runnable cancels
+		// destroys block so looped runnable cancels
 		block.setBroken(true);
-		//Calls onbreak method
+		// Calls onbreak method
 		block.onBreak(e.getPlayer());
 
-		//breaks the item in the actual game and drops custom item.
+		// breaks the item in the actual game and drops custom item.
 		e.getBlock().setType(Material.AIR);
-		if(!e.getPlayer().getGameMode().equals(GameMode.CREATIVE))loc.getWorld().dropItemNaturally(loc, Block.createItemStack(block.getType()));
+		if (!e.getPlayer().getGameMode().equals(GameMode.CREATIVE))
+			loc.getWorld().dropItemNaturally(loc, Block.createItemStack(block.getType()));
 
-		//Kills armor stand if the name is shown
-		if(block.getType().showName())
-		block.getArmorStand().remove();
-		block.setArmorStand(null);
+		// Kills armor stand if the name is shown
+		if (block.getType().showName())
+			block.getArmorStand().remove();
+		block.setArmorStand(null); // only legal place to use this method.
 
-
-		//removes the block from all registrys
+		// removes the block from all registrys
 		ExoticUtilityMain.removeLoop(loc);
 		activeBlocks.remove(loc);
 	}
@@ -130,18 +130,16 @@ public class BlockListener implements Listener {
 	 * Clears all active armor stands for reboot.
 	 */
 	public static void clearStands() {
-		for(Block b: activeBlocks.values()) {
-			if(b.getType().showName()) {
+		for (Block b : activeBlocks.values()) {
+			if (b.getType().showName()) {
 				b.getArmorStand().remove();
 			}
 		}
 	}
 
-
 	/**
-	 * <blockquote>
-	 * Use this to register any blocks
-	 * </blockquote>
+	 * <blockquote> Use this to register any blocks </blockquote>
+	 * 
 	 * @param type the block type being registered
 	 * @return whether or not the block was registered properly
 	 */
@@ -150,15 +148,17 @@ public class BlockListener implements Listener {
 		if (registeredBlocks.containsKey(key))
 			return false;
 		registeredBlocks.put(key, type);
+		//puts both names in the registry to make sure it is easily accessible. 
 		registeredBlocks.put(type.getID().toUpperCase().replace(" ", "_"), type);
+		//makes sure the block is serializable for future use.
 		ConfigurationSerialization.registerClass(type.getBlockClass());
 		return true;
 
 	}
 
-
 	/**
 	 * Registers all block in a list.
+	 * 
 	 * @param types a list of all blocks being registered
 	 */
 	public static void registerBlocks(List<BlockType> types) {
@@ -166,25 +166,38 @@ public class BlockListener implements Listener {
 		for (BlockType type : types)
 			BlockListener.registerBlock(type);
 	}
-
+	/**
+	 * Registers an array of blocks.
+	 * 
+	 * @param types : an array of blocks to be registered.
+	 *
+	 */
 	public static void registerBlocks(BlockType[] types) {
 
 		for (BlockType type : types)
 			BlockListener.registerBlock(type);
 	}
-
+	/**
+	 * @return all registered block types.
+	 */
 	public static Map<String, BlockType> getRegisteredBlocks() {
 		return BlockListener.registeredBlocks;
 	}
 
+	/**
+	 * @return all active blocks.
+	 */
 	public static Map<Location, Block> getActiveBlocks() {
 		return BlockListener.activeBlocks;
 	}
+
 	/**
 	 * @apiNote Do not use as it is automatically done in the API.
 	 * @param block the Block in which the Name tag would be put on.
 	 */
+	@SuppressWarnings("deprecation")
 	public static void addArmorStand(Block block) {
+		//sets up armor stands
 		Location loc = block.getBlock().getLocation().add(0.5, -1, 0.5);
 		ArmorStand as = (ArmorStand) loc.getWorld().spawnEntity(loc, EntityType.ARMOR_STAND);
 		as.setVisible(false);
@@ -192,15 +205,15 @@ public class BlockListener implements Listener {
 		as.setCustomNameVisible(true);
 		as.setGravity(false);
 
-		block.setArmorStand(as);
+		block.setArmorStand(as); // only legal place to use this method
 	}
 
 	/**
 	 * Load Armor stands.
 	 */
 	public static void loadStands() {
-		for(Block b: activeBlocks.values()) {
-			if(b.getType().showName()) {
+		for (Block b : activeBlocks.values()) {
+			if (b.getType().showName()) {
 				BlockListener.addArmorStand(b);
 			}
 		}
@@ -211,21 +224,26 @@ public class BlockListener implements Listener {
 		return registeredBlocks.get(string);
 	}
 
+	/**
+	 * Calls {@link Block#onBlockClick(org.bukkit.event.block.Action, Player)} and
+	 * determines whether or not the event should be cancelled.
+	 * 
+	 * @see Block#onBlockClick(org.bukkit.event.block.Action, Player)
+	 */
 	@EventHandler
 	public void onBlockInteract(PlayerInteractEvent e) {
-		if(e.getClickedBlock() == null)return;
+		if (e.getClickedBlock() == null)
+			return;
 
 		Location loc = e.getClickedBlock().getLocation();
-
-		if(!activeBlocks.containsKey(loc))return;
+		//checks to see if this block is a custom block.
+		if (!activeBlocks.containsKey(loc))
+			return;
 
 		Block block = activeBlocks.get(loc);
 
 		e.setCancelled(block.onBlockClick(e.getAction(), e.getPlayer()));
 
 	}
-
-
-
 
 }

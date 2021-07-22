@@ -8,6 +8,11 @@ import com.kingmo.utils.commands.Command;
 import com.kingmo.utils.commands.CommandManager;
 import com.kingmo.utils.main.Utils;
 
+/**
+ * 
+ * @author Kingmo100 Automatic Give block command. Do not use any of these
+ *         methods.
+ */
 public class GiveBlockCommand extends Command {
 
 	public GiveBlockCommand() {

@@ -212,16 +212,28 @@ public abstract class Block implements ConfigurationSerializable {
 		return this.getType().getItemName();
 	}
 	
-	
+	/**
+	 * @deprecated will change the armor stand that is generated automatically. There is no need to do this. 
+	 * @param stand : an {@link ArmorStand} that will hold itself as a name tag.
+	 */
 	@Deprecated
 	public void setArmorStand(ArmorStand stand) {
 		this.stand = stand;
 	}
-
+	/**
+	 * 
+	 * @return the {@link ArmorStand} which is serving as a name tag.
+	 */
 	public ArmorStand getArmorStand() {
 		return stand;
 	}
-
+	
+	/**
+	 * 
+	 * @param a : the action the player committed which was called.
+	 * @param player : the player which committed the action.
+	 * @return whether or not the action should be cancelled.
+	 */
 	public boolean onBlockClick(Action a, Player player) {
 		return false;
 	}
