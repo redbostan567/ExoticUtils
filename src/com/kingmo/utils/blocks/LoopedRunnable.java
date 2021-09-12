@@ -74,7 +74,7 @@ public class LoopedRunnable implements Runnable, ConfigurationSerializable {
 	@Override
 	public void run() {
 		//checks if the block is broken
-		if (!block.isBroken()) {
+		if (!(block.isBroken() || block.getType().getDelay() == 0)) {
 			//if block is not broken restarts the loop and calculaates new endtime and startime.
 			block.loopedRun(location, player);
 			startTime = endTime;

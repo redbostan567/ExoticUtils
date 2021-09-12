@@ -55,6 +55,8 @@ public class BlockListener implements Listener {
 	@EventHandler
 	public void onBlockPlace(BlockPlaceEvent e) {
 
+		System.out.println("PLACING");
+		
 		ItemStack stack = e.getItemInHand();
 
 		Player player = e.getPlayer();
@@ -62,10 +64,14 @@ public class BlockListener implements Listener {
 		if (!Utils.nonNull(stack))
 			return;
 
+		System.out.println(stack.getItemMeta().getDisplayName() + "       " + registeredBlocks.toString());
+		
 		// Decides whether or not the block in the players hand is a custom block
 		BlockType blockType = registeredBlocks.getOrDefault(stack.getItemMeta().getDisplayName(), null);
 		if (blockType == null)
 			return;
+		
+		System.out.println("PLACING 2 ");
 
 		Location loc = e.getBlock().getLocation();
 
@@ -77,6 +83,8 @@ public class BlockListener implements Listener {
 			e1.printStackTrace();
 		}
 
+		System.out.println("running");
+		
 		block.run(loc, player);
 		// runs the custom block and then decides if its a looped custom block
 		LoopedRunnable loop = new LoopedRunnable(block, player, loc);
@@ -150,6 +158,9 @@ public class BlockListener implements Listener {
 		registeredBlocks.put(key, type);
 		//puts both names in the registry to make sure it is easily accessible. 
 		registeredBlocks.put(type.getID().toUpperCase().replace(" ", "_"), type);
+		
+		System.out.println(registeredBlocks);
+		
 		//makes sure the block is serializable for future use.
 		ConfigurationSerialization.registerClass(type.getBlockClass());
 		return true;

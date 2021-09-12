@@ -53,7 +53,6 @@ public abstract class Command extends BukkitCommand {
 		return this.testPermission(sender) ? tabComplete.get(args.length - 1) : new ArrayList<>();
 	}
 
-	@Override
 	public List<String> tabComplete(CommandSender sender, String alias, String[] args, Location loc) {
 		return this.testPermission(sender) ? tabComplete.get(args.length - 1) : new ArrayList<>();
 	}

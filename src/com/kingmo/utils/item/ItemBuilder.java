@@ -13,6 +13,7 @@ import org.bukkit.inventory.meta.ItemMeta;
 import com.kingmo.utils.glow.GlowNameSpaced;
 import com.kingmo.utils.main.Utils;
 import com.kingmo.utils.nbt.NBTTagManager;
+import com.kingmo.utils.nms.NMSManager;
 
 public class ItemBuilder {
 
@@ -85,7 +86,7 @@ public class ItemBuilder {
 	public ItemBuilder setGlow(boolean glow) {
 		ItemMeta im = item.getItemMeta();
 		if (glow)
-			im.addEnchant(new GlowNameSpaced(), 0, true);
+			im.addEnchant(NMSManager.getGlow(), 0, true);
 		item.setItemMeta(im);
 		return this;
 	}

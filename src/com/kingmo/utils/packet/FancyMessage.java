@@ -1,6 +1,9 @@
 package com.kingmo.utils.packet;
 
 import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
+
+import com.kingmo.utils.nms.NMSManager;
 
 import net.md_5.bungee.api.chat.ClickEvent;
 import net.md_5.bungee.api.chat.ComponentBuilder;
@@ -44,6 +47,12 @@ public class FancyMessage {
 	}
 
 	public void sendMessage(CommandSender player) {
+		
+		if(NMSManager.isDotSpigotLegacy()) {
+			if(player instanceof Player)((Player) player).spigot().sendMessage(this.getComponent());
+			else player.sendMessage(this.getComponent().toLegacyText());
+			return;
+		}
 		player.spigot().sendMessage(this.getComponent());
 	}
 

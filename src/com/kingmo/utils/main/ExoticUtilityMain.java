@@ -20,11 +20,10 @@ import com.kingmo.utils.blocks.BlockType;
 import com.kingmo.utils.blocks.GiveBlockCommand;
 import com.kingmo.utils.blocks.LoopedRunnable;
 import com.kingmo.utils.commands.CommandManager;
-import com.kingmo.utils.glow.GlowNameSpaced;
 import com.kingmo.utils.inventory.InventoryListener;
 import com.kingmo.utils.inventory.InventorySerializable;
 import com.kingmo.utils.nbt.NBTBase;
-
+import com.kingmo.utils.nms.NMSManager;
 
 public class ExoticUtilityMain extends JavaPlugin {
 
@@ -40,7 +39,7 @@ public class ExoticUtilityMain extends JavaPlugin {
 
 	private CommandManager cmdManager;
 
-	private GlowNameSpaced glow;
+	private Enchantment glow;
 
 	static {
 		ConfigurationSerialization.registerClass(Block.class);
@@ -65,22 +64,20 @@ public class ExoticUtilityMain extends JavaPlugin {
 
 		this.loadCommands();
 
-		//TestMain.test();
-
+		// TestMain.test();
 
 		log.info("ExoticUtils enabled");
 
 	}
 
 	private void registerEnchants() {
-		glow = new GlowNameSpaced();
+		glow = NMSManager.getGlow();
 
 		ExoticUtilityMain.registerEnchantment(glow);
 	}
 
 	private void registerEvents() {
 		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
-
 	}
 
 	public void loadAPI() {
@@ -134,7 +131,7 @@ public class ExoticUtilityMain extends JavaPlugin {
 	private void loadData() {
 		Map<Location, Block> active = new HashMap<>();
 
-		 active = (Map<Location, Block>) Utils.loadData(blockFile) == null ? new HashMap<>()
+		active = (Map<Location, Block>) Utils.loadData(blockFile) == null ? new HashMap<>()
 				: (Map<Location, Block>) Utils.loadData(blockFile);
 
 		Bukkit.getPluginManager().registerEvents(new BlockListener(active), this);
@@ -145,8 +142,7 @@ public class ExoticUtilityMain extends JavaPlugin {
 		for (Location loc : loopMap.keySet()) {
 
 			LoopedRunnable run = loopMap.get(loc);
-			Bukkit.getScheduler().scheduleSyncDelayedTask(this, run,
-					run.getTimeLeft());
+			Bukkit.getScheduler().scheduleSyncDelayedTask(this, run, run.getTimeLeft());
 
 			run.setBlock(active.get(loc));
 
@@ -170,8 +166,69 @@ public class ExoticUtilityMain extends JavaPlugin {
 		ExoticUtilityMain.unregisterEnchantment(glow);
 	}
 
-	@SuppressWarnings("deprecation")
 	public static void unregisterEnchantment(Enchantment ench) {
+		if (NMSManager.isEnchantLegacy())
+			ExoticUtilityMain.unregisterEnchantmentByID(ench);
+		else
+			ExoticUtilityMain.unregisterEnchantmentNamespaced(ench);
+	}
+
+	public static void registerEnchantment(Enchantment ench) {
+		if (NMSManager.isEnchantLegacy())
+			ExoticUtilityMain.registerEnchantmentByID(ench);
+		else
+			ExoticUtilityMain.registerEnchantmentNamespaced(ench);
+	}
+
+	/**
+	 * @author Kody Simpson
+	 * @param enchantment
+	 */
+	public static void registerEnchantmentByID(Enchantment enchantment) {
+		boolean registered = true;
+		try {
+			Field f = Enchantment.class.getDeclaredField("acceptingNew");
+			f.setAccessible(true);
+			f.set(null, true);
+			Enchantment.registerEnchantment(enchantment);
+		} catch (Exception e) {
+			registered = false;
+			e.printStackTrace();
+		}
+		if (registered) {
+			// It's been registered!
+		}
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void unregisterEnchantmentByID(Enchantment enchantment) {
+
+		try {
+			Field byIDField = Enchantment.class.getDeclaredField("byId");
+			Field byNameField = Enchantment.class.getDeclaredField("byName");
+
+			byIDField.setAccessible(true);
+			byNameField.setAccessible(true);
+
+			@SuppressWarnings("unchecked")
+			Map<Integer, Enchantment> byID = (Map<Integer, Enchantment>) byIDField.get(null);
+			@SuppressWarnings("unchecked")
+			Map<String, Enchantment> byName = (Map<String, Enchantment>) byNameField.get(null);
+
+			if (byID.containsKey(enchantment.getId()))
+				byID.remove(enchantment.getId());
+			if (byName.containsKey(enchantment.getName()))
+				byName.remove(enchantment.getName());
+
+		} catch (NoSuchFieldException | SecurityException | IllegalArgumentException | IllegalAccessException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+	}
+
+	@SuppressWarnings("deprecation")
+	public static void unregisterEnchantmentNamespaced(Enchantment ench) {
 		try {
 			Field byIdField = Enchantment.class.getDeclaredField("byKey");
 			Field byNameField = Enchantment.class.getDeclaredField("byName");
@@ -184,29 +241,29 @@ public class ExoticUtilityMain extends JavaPlugin {
 			@SuppressWarnings("unchecked")
 			HashMap<String, Enchantment> byName = (HashMap<String, Enchantment>) byNameField.get(null);
 
-			if(byId.containsKey(ench.getKey()))
-			byId.remove(ench.getKey());
+			if (byId.containsKey(ench.getKey()))
+				byId.remove(ench.getKey());
 
-			if(byName.containsKey(ench.getName()))
-			byName.remove(ench.getName());
-			} catch (Exception ignored) { }
+			if (byName.containsKey(ench.getName()))
+				byName.remove(ench.getName());
+		} catch (Exception ignored) {
+		}
 	}
 
-	 public static void registerEnchantment(Enchantment enchantment) {
-	        boolean registered = true;
-	        try {
-	            Field f = Enchantment.class.getDeclaredField("acceptingNew");
-	            f.setAccessible(true);
-	            f.set(null, true);
-	            Enchantment.registerEnchantment(enchantment);
-	        } catch (Exception e) {
-	            registered = false;
-	            e.printStackTrace();
-	        }
-	        if(registered){
-	            // It's been registered!
-	        }
-	    }
-
+	public static void registerEnchantmentNamespaced(Enchantment enchantment) {
+		boolean registered = true;
+		try {
+			Field f = Enchantment.class.getDeclaredField("acceptingNew");
+			f.setAccessible(true);
+			f.set(null, true);
+			Enchantment.registerEnchantment(enchantment);
+		} catch (Exception e) {
+			registered = false;
+			e.printStackTrace();
+		}
+		if (registered) {
+			// It's been registered!
+		}
+	}
 
 }

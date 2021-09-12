@@ -14,10 +14,19 @@ import com.kingmo.utils.glow.GlowNameSpaced;
 import com.kingmo.utils.main.Utils;
 
 public class NMSManager {
-
+	
 	private static String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3]
 			+ ".";
 
+	private static final boolean legacyEnchants = Utils.startsWithAny("v", NMSManager.getVersion(), Utils.toList("1_8",
+			"1_9",
+			"1_10",
+			"1_11",
+			"1_12",
+			"1_7"));
+	
+	private static final boolean legacyText = Utils.startsWithAny("v", NMSManager.getVersion(), Utils.toList("1_8", "1_9", "1_10"));
+	
 	public static Class<?> getNMSClass(String nmsClassString) throws ClassNotFoundException {
 		String name = "net.minecraft.server." + version + nmsClassString;
 		Class<?> nmsClass = Class.forName(name);
@@ -68,19 +77,22 @@ public class NMSManager {
 	}
 
 	public static Enchantment getGlow() {
-
-		if (Utils.startsWithAny(NMSManager.getVersion(), Utils.toList("1_8",
-				"1_9",
-				"1_10",
-				"1_11",
-				"1_12",
-				"1_7")))
+		System.out.println(NMSManager.version);
+		if (NMSManager.isEnchantLegacy())
 			return new GlowId();
 		return new GlowNameSpaced();
 	}
 
 	public static String getVersion() {
 		return NMSManager.version;
+	}
+
+	public static boolean isEnchantLegacy() {
+		return legacyEnchants;
+	}
+
+	public static boolean isDotSpigotLegacy() {
+		return legacyText;
 	}
 
 }

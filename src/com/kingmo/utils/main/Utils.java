@@ -115,10 +115,14 @@ public class Utils {
 		for(I i: set)list.add(i);
 		return list;
 	}
-
+	
 	public static boolean startsWithAny(String test, List<String> list) {
+		return startsWithAny("", test, list);
+	}
+
+	public static boolean startsWithAny(String prefix, String test, List<String> list) {
 		for(String str: list)
-			if (test.startsWith(str))return true;
+			if (test.startsWith(prefix + str))return true;
 
 		return false;
 	}
