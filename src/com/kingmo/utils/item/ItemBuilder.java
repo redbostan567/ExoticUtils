@@ -1,6 +1,7 @@
 package com.kingmo.utils.item;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +30,7 @@ public class ItemBuilder {
 		lore = config.contains(path + ".lore") ? colorCode(config.getStringList(path + ".lore")) : new ArrayList<>();
 		displayName = config.contains(path + ".name")
 				? ChatColor.translateAlternateColorCodes('&', config.getString(path + ".name"))
-				: "DEFAULT DISPLAY NAME PLEASE SET IN CONFIG";
+				: material.name();
 		glowing = config.contains(path + ".glow") ? config.getBoolean(path + ".glow") : false;
 
 		item = new ItemStack(material);
@@ -38,9 +39,21 @@ public class ItemBuilder {
 		im.setLore(lore);
 		im.setDisplayName(displayName);
 		if (glowing)
-			im.addEnchant(new GlowNameSpaced(), 0, true);
+			im.addEnchant(NMSManager.getGlow(), 0, true);
 		item.setItemMeta(im);
 
+	}
+	
+	public Map<String, Object> remakeMap(String finalPath){
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put(finalPath + ".mat", material.toString());
+		map.put(finalPath + ".lore", lore);
+		map.put(finalPath + ".name", displayName);
+		map.put(finalPath + ".glow", glowing);
+		
+		return map;
+		
 	}
 
 	private List<String> colorCode(List<String> stringList) {
@@ -52,6 +65,7 @@ public class ItemBuilder {
 
 	public ItemBuilder(String name, Material m, List<String> lore) {
 		ItemStack item = new ItemStack(m);
+		this.material = m;
 		ItemMeta itemMeta = item.getItemMeta();
 
 		itemMeta.setDisplayName(name);
@@ -69,6 +83,7 @@ public class ItemBuilder {
 	}
 
 	public ItemBuilder setName(String name) {
+		this.displayName = name;
 		ItemMeta im = item.getItemMeta();
 		im.setDisplayName(name);
 		item.setItemMeta(im);
@@ -76,6 +91,7 @@ public class ItemBuilder {
 	}
 
 	public ItemBuilder setLore(String... lores) {
+		this.lore = Utils.toList(lores);
 		List<String> lore = Utils.toList(lores);
 		ItemMeta im = item.getItemMeta();
 		im.setLore(lore);
@@ -84,6 +100,7 @@ public class ItemBuilder {
 	}
 
 	public ItemBuilder setGlow(boolean glow) {
+		this.glowing = true;
 		ItemMeta im = item.getItemMeta();
 		if (glow)
 			im.addEnchant(NMSManager.getGlow(), 0, true);

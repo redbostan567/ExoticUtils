@@ -87,5 +87,14 @@ public class ConfigManager {
 
 		return returnable == null || returnable == "" ? def : returnable;
 	}
+	
+	public void addDefault(String path, Object def) {
+		config.addDefault(path, def);
+	}
+	
+	public void saveDefaults() {
+        config.options().copyDefaults(true);
+        this.plugin.saveConfig();
+	}
 
 }

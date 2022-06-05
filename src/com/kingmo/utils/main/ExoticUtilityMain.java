@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.NamespacedKey;
 import org.bukkit.configuration.serialization.ConfigurationSerialization;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -20,6 +19,7 @@ import com.kingmo.utils.blocks.BlockType;
 import com.kingmo.utils.blocks.GiveBlockCommand;
 import com.kingmo.utils.blocks.LoopedRunnable;
 import com.kingmo.utils.commands.CommandManager;
+import com.kingmo.utils.events.ArmorListener;
 import com.kingmo.utils.inventory.InventoryListener;
 import com.kingmo.utils.inventory.InventorySerializable;
 import com.kingmo.utils.nbt.NBTBase;
@@ -59,7 +59,7 @@ public class ExoticUtilityMain extends JavaPlugin {
 		createSaveFiles();
 
 		log.info("Loading commands");
-
+		
 		cmdManager = new CommandManager(this);
 
 		this.loadCommands();
@@ -78,6 +78,7 @@ public class ExoticUtilityMain extends JavaPlugin {
 
 	private void registerEvents() {
 		Bukkit.getPluginManager().registerEvents(new InventoryListener(), this);
+		Bukkit.getPluginManager().registerEvents(new ArmorListener(this), this);
 	}
 
 	public void loadAPI() {
@@ -237,7 +238,7 @@ public class ExoticUtilityMain extends JavaPlugin {
 			byNameField.setAccessible(true);
 
 			@SuppressWarnings("unchecked")
-			HashMap<NamespacedKey, Enchantment> byId = (HashMap<NamespacedKey, Enchantment>) byIdField.get(null);
+			HashMap<org.bukkit.NamespacedKey, Enchantment> byId = (HashMap<org.bukkit.NamespacedKey, Enchantment>) byIdField.get(null);
 			@SuppressWarnings("unchecked")
 			HashMap<String, Enchantment> byName = (HashMap<String, Enchantment>) byNameField.get(null);
 
