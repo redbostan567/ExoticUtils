@@ -71,7 +71,6 @@ public class BlockListener implements Listener {
 		if (blockType == null)
 			return;
 		
-		System.out.println("PLACING 2 ");
 
 		Location loc = e.getBlock().getLocation();
 
@@ -83,8 +82,6 @@ public class BlockListener implements Listener {
 			e1.printStackTrace();
 		}
 
-		System.out.println("running");
-		
 		block.run(loc, player);
 		// runs the custom block and then decides if its a looped custom block
 		LoopedRunnable loop = new LoopedRunnable(block, player, loc);

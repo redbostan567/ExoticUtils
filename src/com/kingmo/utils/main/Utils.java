@@ -12,7 +12,11 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import com.kingmo.utils.commands.Command;
+import com.kingmo.utils.commands.CommandManager;
+import com.kingmo.utils.main.ReturnableMessage;
 import org.bukkit.ChatColor;
+import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.io.BukkitObjectInputStream;
 import org.bukkit.util.io.BukkitObjectOutputStream;
@@ -126,6 +130,27 @@ public class Utils {
 
 		return false;
 	}
+
+	public static <I> I sendAndReturn(CommandSender sender, I returnable, Command cmd, String... message){
+		for(String msg: message){
+			sender.sendMessage(CommandManager.get(cmd, msg));
+		}
+		return returnable;
+	}
+
+	public static <I> I sendAndReturn(CommandSender sender, I returnable, String... message){
+		for(String msg: message){
+			sender.sendMessage(msg);
+		}
+		return returnable;
+	}
+
+	public static <I> I sendAndReturn(CommandSender sender, ReturnableMessage<I> msg){
+		sender.sendMessage(msg.getMessage());
+		return msg.getReturnable();
+	}
+
+
 
 
 }

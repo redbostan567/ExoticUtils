@@ -37,7 +37,7 @@ public class NBTString extends NBTBase<String>{
 		try {
 			System.out.println(version);
 		switch(NBTBase.version.replace(".", "").replace("v", "")) {
-
+		case "1_18_R2":
 		case "1_16_R3":
 			return this.getNbtTagClass().getDeclaredMethod("a", String.class).invoke(null, this.getData());
 
