@@ -147,7 +147,7 @@ public class Utils {
 
 	public static <I> I sendAndReturn(CommandSender sender, ReturnableMessage<I> msg){
 		sender.sendMessage(msg.getMessage());
-		return msg.getReturnable();
+		return msg.getReturned();
 	}
 
 
