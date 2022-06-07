@@ -152,8 +152,9 @@ public class Utils {
 		return msg.getReturned();
 	}
 	
-	public static <I> I sendAndReturn(CommandSender sender, I returnable, FancyMessage msg) {
-		msg.sendMessage(sender);
+	public static <I> I sendAndReturn(CommandSender sender, I returnable, FancyMessage... message) {
+		for(FancyMessage msg: message)msg.sendMessage(sender);
+			
 		return returnable;
 	}
 
