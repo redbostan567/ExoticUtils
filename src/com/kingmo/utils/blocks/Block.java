@@ -78,7 +78,7 @@ public abstract class Block implements ConfigurationSerializable {
 	public abstract void run(Location location, OfflinePlayer player);
 
 	/**
-	 * @apiNote only use if {@link BlockType#getDelay()} != null || 0
+	 * @apiNote only use if {@link BlockType#getDelay()} != (null || 0)
 	 */
 	public void loopedRun(Location location, OfflinePlayer player) {
 		if (player.isOnline())

@@ -54,6 +54,11 @@ public class RewardManager {
 				rw = rw == null ? new CommandReward(commands, true)
 						: new CompoundReward(rw, new CommandReward(commands, true));
 			}
+			if (config.contains(absolutePath + "xp")) {
+				int xp = config.getInt(absolutePath + "xp");
+				rw = rw == null ? new XpReward(xp)
+						: new CompoundReward(rw, new XpReward(xp));
+			}
 
 			if (rw != null)
 				rewardMap.put(rw, weight);

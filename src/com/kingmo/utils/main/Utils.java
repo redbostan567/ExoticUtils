@@ -15,6 +15,8 @@ import java.util.Set;
 import com.kingmo.utils.commands.Command;
 import com.kingmo.utils.commands.CommandManager;
 import com.kingmo.utils.main.ReturnableMessage;
+import com.kingmo.utils.packet.FancyMessage;
+
 import org.bukkit.ChatColor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.inventory.ItemStack;
@@ -148,6 +150,11 @@ public class Utils {
 	public static <I> I sendAndReturn(CommandSender sender, ReturnableMessage<I> msg){
 		sender.sendMessage(msg.getMessage());
 		return msg.getReturned();
+	}
+	
+	public static <I> I sendAndReturn(CommandSender sender, I returnable, FancyMessage msg) {
+		msg.sendMessage(sender);
+		return returnable;
 	}
 
 
