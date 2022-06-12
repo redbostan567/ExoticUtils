@@ -3,6 +3,7 @@ package com.kingmo.utils.nms;
 import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.Arrays;
 
 import org.bukkit.Bukkit;
 import org.bukkit.enchantments.Enchantment;
@@ -18,14 +19,19 @@ public class NMSManager {
 	private static String version = Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3]
 			+ ".";
 
-	private static final boolean legacyEnchants = Utils.startsWithAny("v", NMSManager.getVersion(), Utils.toList("1_8",
+	private static final boolean legacyEnchants = Utils.startsWithAny("v", NMSManager.getVersion(), Arrays.asList("1_8",
 			"1_9",
 			"1_10",
 			"1_11",
 			"1_12",
 			"1_7"));
 	
-	private static final boolean legacyText = Utils.startsWithAny("v", NMSManager.getVersion(), Utils.toList("1_8", "1_9", "1_10"));
+	private static final boolean legacyText = Utils.startsWithAny("v", NMSManager.getVersion(), Arrays.asList("1_8", "1_9", "1_10"));
+	
+	/**
+	 * Have to add every new version.
+	 */
+	private static final boolean renamedItem  = Utils.startsWithAny("v", NMSManager.getVersion(), Arrays.asList("1_18", "1_19", "1_17"));
 	
 	public static Class<?> getNMSClass(String nmsClassString) throws ClassNotFoundException {
 		String name = "net.minecraft.server." + version + nmsClassString;
@@ -93,6 +99,10 @@ public class NMSManager {
 
 	public static boolean isDotSpigotLegacy() {
 		return legacyText;
+	}
+	
+	public static boolean isRenamedItemEnum() {
+		return renamedItem;
 	}
 
 }

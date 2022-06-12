@@ -1,0 +1,6 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="KingmoUtils:jar">
+    <output-path>$PROJECT_DIR$/classes/artifacts/KingmoUtils_jar</output-path>
+    <root id="archive" name="KingmoUtils.jar" />
+  </artifact>
+</component>

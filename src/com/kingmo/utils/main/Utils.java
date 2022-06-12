@@ -38,6 +38,7 @@ public class Utils {
 	}
 
 	@SafeVarargs
+	@Deprecated
 	public static <E> List<E> toList(E... e){
 		List<E> list = new ArrayList<>();
 		for(E e1: e)list.add(e1);
@@ -46,6 +47,7 @@ public class Utils {
 	}
 
 	@SafeVarargs
+	@Deprecated
 	public static <E> Set<E> toSet(E... e){
 
 		Set<E> set = new HashSet<>();

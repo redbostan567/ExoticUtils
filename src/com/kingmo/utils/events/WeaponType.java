@@ -3,12 +3,17 @@ package com.kingmo.utils.events;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 
+import com.kingmo.utils.nms.NMSManager;
+
 public enum WeaponType implements NonStackableItemType {
 	SWORD, PICKAXE, AXE, SHOVEL, HOE;
 	
 	public static final WeaponType[] ALL = {SWORD, PICKAXE, AXE, SHOVEL, HOE};
 
 	public static NonStackableItemType getType(Material m) {
+		
+		if(NMSManager.isRenamedItemEnum())
+		
 		switch(m) {
 		
 		case DIAMOND_SWORD:
@@ -65,6 +70,62 @@ public enum WeaponType implements NonStackableItemType {
 		default :
 			return null;
 		}
+		else switch(m) {
+		
+		case DIAMOND_SWORD:
+			return SWORD;
+		case IRON_SWORD:
+			return SWORD;
+		case GOLDEN_SWORD:
+			return SWORD;
+		case STONE_SWORD:
+			return SWORD;
+		case WOODEN_SWORD:
+			return SWORD;
+		case DIAMOND_PICKAXE:
+			return PICKAXE;
+		case IRON_PICKAXE:
+			return PICKAXE;
+		case GOLDEN_PICKAXE:
+			return PICKAXE;
+		case STONE_PICKAXE:
+			return PICKAXE;
+		case WOODEN_PICKAXE:
+			return PICKAXE;
+		case DIAMOND_SHOVEL:
+			return SHOVEL;
+		case IRON_SHOVEL:
+			return SHOVEL;
+		case GOLDEN_SHOVEL:
+			return SHOVEL;
+		case STONE_SHOVEL:
+			return SHOVEL;
+		case WOODEN_SHOVEL:
+			return SHOVEL;
+		case DIAMOND_AXE:
+			return AXE;
+		case IRON_AXE:
+			return AXE;
+		case GOLDEN_AXE:
+			return AXE;
+		case STONE_AXE:
+			return AXE;
+		case WOODEN_AXE:
+			return AXE;
+		case DIAMOND_HOE:
+			return HOE;
+		case IRON_HOE:
+			return HOE;
+		case GOLDEN_HOE:
+			return HOE;
+		case STONE_HOE:
+			return HOE;
+		case WOODEN_HOE:
+			return HOE;
+		
+		default :
+			return null;
+		}
 	}
 
 	@Override
@@ -73,7 +134,7 @@ public enum WeaponType implements NonStackableItemType {
 		case SWORD:
 			return Material.DIAMOND_SWORD;
 		case SHOVEL:
-			return Material.DIAMOND_SPADE;
+			return !NMSManager.isRenamedItemEnum() ? Material.DIAMOND_SPADE : Material.DIAMOND_SHOVEL;
 		case AXE:
 			return Material.DIAMOND_AXE;
 		case HOE:
@@ -93,51 +154,7 @@ public enum WeaponType implements NonStackableItemType {
 
 	
 	public static boolean isWeapon(Material type) {
-		switch (type) {
-		case DIAMOND_SWORD:
-			return true;
-		case IRON_SWORD:
-			return true;
-		case GOLD_SWORD:
-			return true;
-		case STONE_SWORD:
-			return true;
-		case WOOD_SWORD:
-			return true;
-		case DIAMOND_AXE:
-			return true;
-		case IRON_AXE:
-			return true;
-		case GOLD_AXE:
-			return true;
-		case STONE_AXE:
-			return true;
-		case WOOD_AXE:
-			return true;
-		case DIAMOND_SPADE:
-			return true;
-		case IRON_SPADE:
-			return true;
-		case GOLD_SPADE:
-			return true;
-		case STONE_SPADE:
-			return true;
-		case WOOD_SPADE:
-			return true;
-		case DIAMOND_PICKAXE:
-			return true;
-		case IRON_PICKAXE:
-			return true;
-		case GOLD_PICKAXE:
-			return true;
-		case STONE_PICKAXE:
-			return true;
-		case WOOD_PICKAXE:
-			return true;
-		default:
-			break;
-		}
-		return false;
+		return getType(type) != null;
 	}
 	
 	public static boolean checkWeapon(ItemStack is) {

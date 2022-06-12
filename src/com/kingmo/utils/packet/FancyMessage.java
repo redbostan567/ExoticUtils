@@ -32,13 +32,15 @@ public class FancyMessage {
 
 		int max = hoverText.length-1;
 
+		if(max >= 0) {
+		
 		for(int i = 0; i < max; i++) {
 			builder.append(hoverText[i] + "\n");
 		}
 		builder.append(hoverText[max]);
 		this.hover = new HoverEvent(hover, new ComponentBuilder(builder.toString()).create());
 		if(hover!=null)comp.setHoverEvent(this.hover);
-
+		}
 		this.component = comp;
 	}
 

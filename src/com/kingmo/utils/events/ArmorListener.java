@@ -1,5 +1,7 @@
 package com.kingmo.utils.events;
 
+import java.util.Arrays;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -28,6 +30,8 @@ import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import com.kingmo.utils.nms.NMSManager;
 
 public class ArmorListener implements Listener {
 
@@ -242,55 +246,11 @@ public class ArmorListener implements Listener {
 	}
 
 	public static boolean isArmor(Material type) {
-		switch (type) {
-
-		case DIAMOND_HELMET:
-			return true;
-		case DIAMOND_CHESTPLATE:
-			return true;
-		case DIAMOND_LEGGINGS:
-			return true;
-		case DIAMOND_BOOTS:
-			return true;
-		case IRON_HELMET:
-			return true;
-		case IRON_CHESTPLATE:
-			return true;
-		case IRON_LEGGINGS:
-			return true;
-		case IRON_BOOTS:
-			return true;
-		case CHAINMAIL_HELMET:
-			return true;
-		case CHAINMAIL_CHESTPLATE:
-			return true;
-		case CHAINMAIL_LEGGINGS:
-			return true;
-		case CHAINMAIL_BOOTS:
-			return true;
-		case GOLD_HELMET:
-			return true;
-		case GOLD_CHESTPLATE:
-			return true;
-		case GOLD_LEGGINGS:
-			return true;
-		case GOLD_BOOTS:
-			return true;
-		case LEATHER_HELMET:
-			return true;
-		case LEATHER_CHESTPLATE:
-			return true;
-		case LEATHER_LEGGINGS:
-			return true;
-		case LEATHER_BOOTS:
-			return true;
-		default:
-			return false;
-		}
-
+		return getArmorType(type) != null;
 	}
 
 	public static ArmorType getArmorType(Material m) {
+		if(!NMSManager.isRenamedItemEnum())
 		switch (m) {
 
 		case DIAMOND_HELMET:
@@ -334,8 +294,54 @@ public class ArmorListener implements Listener {
 		case LEATHER_BOOTS:
 			return ArmorType.BOOTS;
 		default:
-			return ArmorType.CHESTPLATE;
+			return null;
 		}
+		else 
+			switch (m) {
+
+			case DIAMOND_HELMET:
+				return ArmorType.HELMET;
+			case DIAMOND_CHESTPLATE:
+				return ArmorType.CHESTPLATE;
+			case DIAMOND_LEGGINGS:
+				return ArmorType.LEGGINGS;
+			case DIAMOND_BOOTS:
+				return ArmorType.BOOTS;
+			case IRON_HELMET:
+				return ArmorType.HELMET;
+			case IRON_CHESTPLATE:
+				return ArmorType.CHESTPLATE;
+			case IRON_LEGGINGS:
+				return ArmorType.LEGGINGS;
+			case IRON_BOOTS:
+				return ArmorType.BOOTS;
+			case CHAINMAIL_HELMET:
+				return ArmorType.HELMET;
+			case CHAINMAIL_CHESTPLATE:
+				return ArmorType.CHESTPLATE;
+			case CHAINMAIL_LEGGINGS:
+				return ArmorType.LEGGINGS;
+			case CHAINMAIL_BOOTS:
+				return ArmorType.BOOTS;
+			case GOLDEN_HELMET:
+				return ArmorType.HELMET;
+			case GOLDEN_CHESTPLATE:
+				return ArmorType.CHESTPLATE;
+			case GOLDEN_LEGGINGS:
+				return ArmorType.LEGGINGS;
+			case GOLDEN_BOOTS:
+				return ArmorType.BOOTS;
+			case LEATHER_HELMET:
+				return ArmorType.HELMET;
+			case LEATHER_CHESTPLATE:
+				return ArmorType.CHESTPLATE;
+			case LEATHER_LEGGINGS:
+				return ArmorType.LEGGINGS;
+			case LEATHER_BOOTS:
+				return ArmorType.BOOTS;
+			default:
+				return null;
+			}
 
 	}
 
@@ -453,7 +459,7 @@ public class ArmorListener implements Listener {
 
 				armorContents[slot] = null;
 				p.getInventory().setArmorContents(armorContents);
-				p.playSound(p.getLocation(), Sound.ORB_PICKUP, 2.0f, 2.0f);
+				p.playSound(p.getLocation(), NMSManager.isRenamedItemEnum() ? Sound.ENTITY_EXPERIENCE_ORB_PICKUP : Sound.ORB_PICKUP, 2.0f, 2.0f);
 				Bukkit.getServer().getPluginManager().callEvent(new ArmorUnequipEvent(p, EquipMethod.APPLY,
 						(ArmorType) ArmorType.getType(armorContent.getType()), armorContent));
 
@@ -635,6 +641,7 @@ public class ArmorListener implements Listener {
 	}
 
 	public static WeaponType getWeaponType(Material type) {
+		if(!NMSManager.isRenamedItemEnum())
 		switch (type) {
 		case DIAMOND_SWORD:
 			return WeaponType.SWORD;
@@ -679,6 +686,51 @@ public class ArmorListener implements Listener {
 		default:
 			break;
 		}
+		else
+			switch (type) {
+			case DIAMOND_SWORD:
+				return WeaponType.SWORD;
+			case IRON_SWORD:
+				return WeaponType.SWORD;
+			case GOLDEN_SWORD:
+				return WeaponType.SWORD;
+			case STONE_SWORD:
+				return WeaponType.SWORD;
+			case WOODEN_SWORD:
+				return WeaponType.SWORD;
+			case DIAMOND_AXE:
+				return WeaponType.AXE;
+			case IRON_AXE:
+				return WeaponType.AXE;
+			case GOLDEN_AXE:
+				return WeaponType.AXE;
+			case STONE_AXE:
+				return WeaponType.AXE;
+			case WOODEN_AXE:
+				return WeaponType.AXE;
+			case DIAMOND_SHOVEL:
+				return WeaponType.SHOVEL;
+			case IRON_SHOVEL:
+				return WeaponType.SHOVEL;
+			case GOLDEN_SHOVEL:
+				return WeaponType.SHOVEL;
+			case STONE_SHOVEL:
+				return WeaponType.SHOVEL;
+			case WOODEN_SHOVEL:
+				return WeaponType.SHOVEL;
+			case DIAMOND_PICKAXE:
+				return WeaponType.PICKAXE;
+			case IRON_PICKAXE:
+				return WeaponType.PICKAXE;
+			case GOLDEN_PICKAXE:
+				return WeaponType.PICKAXE;
+			case STONE_PICKAXE:
+				return WeaponType.PICKAXE;
+			case WOODEN_PICKAXE:
+				return WeaponType.PICKAXE;
+			default:
+				break;
+			}
 		return null;
 
 	}
